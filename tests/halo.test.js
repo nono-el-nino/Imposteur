@@ -1,6 +1,10 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { createHaloProfile, haloPosition } from "../src/halo-motion.js";
+import {
+  createHaloProfile,
+  haloPosition,
+  haloForm,
+} from "../src/halo-motion.js";
 test("organic movement stays bounded and continuous with varying speed", () => {
   const profile = createHaloProfile(() => 0.37);
   let previous = haloPosition(0, profile);
@@ -30,4 +34,21 @@ test("different profiles follow independent paths", () => {
       createHaloProfile(() => 0.8),
     ),
   );
+});
+
+test("halo morphs smoothly between rounded and connected two-lobed forms", () => {
+  const profile = createHaloProfile(() => 0.37);
+  const forms = [];
+  for (let t = 0; t < 180; t += 0.1) {
+    const form = haloForm(t, profile);
+    forms.push(form);
+    assert.ok(form.neck > 30);
+    assert.ok(form.path.endsWith("Z"));
+    assert.ok(!/NaN|Infinity/.test(form.path));
+    if (forms.length > 1)
+      assert.ok(Math.abs(form.neck - forms.at(-2).neck) < 2);
+  }
+  assert.ok(Math.min(...forms.map((f) => f.morph)) < 0.01);
+  assert.ok(Math.max(...forms.map((f) => f.morph)) > 0.99);
+  assert.notEqual(forms[0].path, forms[100].path);
 });

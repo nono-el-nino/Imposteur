@@ -11,7 +11,7 @@ export const PillButton = (label, action, kind = "primary", extra = "") =>
 export const GlassSurface = (content, classes = "") =>
   `<section class="glass ${classes}">${content}</section>`;
 export const Halo = () =>
-  '<div class="halo-field" aria-hidden="true"><div class="halo"></div><div class="halo second"></div></div>';
+  `<div class="halo-field" aria-hidden="true">${["halo", "halo second"].map((name) => `<div class="${name}"><svg class="halo-form" viewBox="-150 -150 300 300"><path d="M-128 0C-128-70.656-70.656-128 0-128C70.656-128 128-70.656 128 0C128 70.656 70.656 128 0 128C-70.656 128-128 70.656-128 0Z"/></svg></div>`).join("")}</div>`;
 export const PlayerChip = (p, i, selected) =>
   `<button class="player-chip glass ${selected === p.id ? "selected" : ""}" data-vote="${p.id}" aria-pressed="${selected === p.id}"><span class="mono">${String(i + 1).padStart(2, "0")}</span><strong>${escape(p.name)}</strong><span aria-hidden="true">${selected === p.id ? "✓" : ""}</span></button>`;
 export function letters(text) {

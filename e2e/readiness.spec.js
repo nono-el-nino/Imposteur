@@ -214,6 +214,8 @@ test("flou branding and independent wandering halos respect reduced motion", asy
       items.map((el) => ({
         transform: el.style.transform,
         opacity: parseFloat(getComputedStyle(el).opacity),
+        shape: el.querySelector("path").getAttribute("d"),
+        rotation: el.querySelector(".halo-form").style.transform,
       })),
     );
   const before = await sample();
@@ -223,6 +225,8 @@ test("flou branding and independent wandering halos respect reduced motion", asy
   const after = await sample();
   expect(after[0].transform).not.toBe(before[0].transform);
   expect(after[1].transform).not.toBe(before[1].transform);
+  expect(after[0].shape).not.toBe(before[0].shape);
+  expect(after[1].shape).not.toBe(before[1].shape);
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.evaluate(
     () =>
