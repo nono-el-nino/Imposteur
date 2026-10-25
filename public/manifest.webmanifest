@@ -1,0 +1,32 @@
+{
+  "id": "./",
+  "name": "Imposteur — Voile",
+  "short_name": "Imposteur",
+  "description": "Un téléphone passe. Le doute reste. Jeu de soirée à mots secrets.",
+  "lang": "fr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#E9ECF0",
+  "theme_color": "#E9ECF0",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

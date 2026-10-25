@@ -1,0 +1,31 @@
+@import "@fontsource/hanken-grotesk/latin-400.css";
+@import "@fontsource/hanken-grotesk/latin-500.css";
+@import "@fontsource/hanken-grotesk/latin-700.css";
+@import "@fontsource/jetbrains-mono/latin-400.css";
+:root {
+  --givre: #e9ecf0;
+  --encre: #1a1d22;
+  --brume: #5d636c;
+  --verre: rgba(255, 255, 255, 0.5);
+  --verre-filet: rgba(255, 255, 255, 0.8);
+  --halo-jeu: oklch(0.78 0.09 250);
+  --halo-elimination: oklch(0.78 0.09 25);
+  --halo-victoire: oklch(0.78 0.09 150);
+  --halo-mrwhite: oklch(0.78 0 0);
+  --radius: 28px;
+  --pill: 999px;
+  --micro: 160ms;
+  --standard: 320ms;
+  --focus: 420ms;
+  --hold: 450ms;
+  --drama: 1400ms;
+  --out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --in-out: cubic-bezier(0.6, 0, 0.2, 1);
+  --spring: cubic-bezier(0.34, 1.45, 0.64, 1);
+  --quint: cubic-bezier(0.22, 1, 0.36, 1);
+  font-family: "Hanken Grotesk", sans-serif;
+  font-synthesis: none;
+  color: var(--encre);
+  background: var(--givre);
+  font-weight: 400;
+}
