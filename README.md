@@ -39,3 +39,7 @@ Ce sont les règles retenues par cette application, avec des variantes possibles
 Seuls les prénoms et paramètres sont conservés en localStorage. Aucun mot ni rôle sauvegardé, aucune donnée de partie envoyée à un serveur. Un rechargement abandonne donc la manche. La carte est retirée du DOM quand elle est cachée, quand la fenêtre perd le focus ou quand l'application passe en arrière-plan. Cette protection visuelle n'empêche pas une inspection technique du navigateur, une capture d'écran ou quelqu'un qui regarde par-dessus l'épaule. Le propriétaire du téléphone doit aussi jouer sans inspecter le code.
 
 Les mots sont gardés secrets jusqu'à la fin de partie, sauf la carte personnelle de chaque joueur. Aucun service tiers requis pour le jeu ; seul le téléchargement facultatif des polices utilise Google Fonts.
+
+## GitHub Pages
+
+Le workflow `.github/workflows/pages.yml` teste et compile le site à chaque push sur `main`, puis le déploie sur Pages. Dans **Settings → Pages → Build and deployment → Source**, sélectionner **GitHub Actions**. Si nécessaire, lancer ensuite **Actions → Deploy to GitHub Pages → Run workflow**. Après succès du déploiement, l'adresse attendue est `https://nono-el-nino.github.io/Imposteur/`. Le lien n'est actif qu'après activation de Pages et réussite du workflow. La configuration Vite utilise des chemins relatifs pour servir les ressources sous `/Imposteur/`.
