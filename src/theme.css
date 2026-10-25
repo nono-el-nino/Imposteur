@@ -5,13 +5,22 @@
 :root {
   --givre: #e9ecf0;
   --encre: #1a1d22;
-  --brume: #5d636c;
+  --brume: #4e555f;
   --verre: rgba(255, 255, 255, 0.5);
   --verre-filet: rgba(255, 255, 255, 0.8);
   --halo-jeu: oklch(0.78 0.09 250);
   --halo-elimination: oklch(0.78 0.09 25);
   --halo-victoire: oklch(0.78 0.09 150);
   --halo-mrwhite: oklch(0.78 0 0);
+  /* Shared reading scale: supporting text never drops below 18px. */
+  --text-support: 18px;
+  --text-body: 20px;
+  --text-lead: 22px;
+  --text-label: 24px;
+  --text-number: 22px;
+  --text-title: 38px;
+  --weight-body: 500;
+  --weight-strong: 700;
   --radius: 28px;
   --pill: 999px;
   --micro: 160ms;
@@ -27,6 +36,6 @@
   font-synthesis: none;
   color: var(--encre);
   background: var(--givre);
-  font-weight: 400;
-  font-size: 18px;
+  font-weight: var(--weight-body);
+  font-size: var(--text-body);
 }
