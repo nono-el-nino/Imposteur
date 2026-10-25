@@ -57,9 +57,16 @@ Direction artistique givrée, verre dépoli, halos de phase et transitions de mi
 
 Sur iPhone : ouvrir le site dans Safari, puis **Partager → Sur l’écran d’accueil**. Sur Android : **Installer l’application** dans le navigateur (ou bouton proposé à l’accueil lorsque disponible). L’application utilise un manifeste, des icônes et un service worker en production HTTPS ; le serveur de développement ne l’active pas.
 
-Après une première ouverture connectée et la mise en cache terminée, le jeu et les polices fonctionnent hors ligne. La mise en cache ne conserve que les fichiers statiques, jamais la partie. Les mises à jour s’activent après fermeture de tous les onglets/fenêtres de l’application ; aucune mise à jour ne force l’interruption d’une partie en cours.
+Après une première ouverture connectée et la mise en cache terminée, le jeu et les polices fonctionnent hors ligne. La mise en cache ne conserve que les fichiers statiques, jamais la partie. Les mises à jour du cache s’activent dès que leur installation complète réussit ; elles ne rechargent jamais une partie en cours. Le nouveau contenu apparaît à la prochaine ouverture ou actualisation. Les fichiers des versions précédentes restent disponibles pour les onglets déjà ouverts.
 
 Validation Voile : tests des règles, build, parcours Chromium mobile (appui interrompu/complet, Mr White, double appui, vote et victoire), rechargement hors ligne sous `/Imposteur/`, lecture au clavier et réduction des animations. L’installation dans l’interface système iOS/Android reste à vérifier sur appareil physique.
 
 
 Lisibilité : textes agrandis, nom et icônes Voile, carte entière sensible à l’appui. Les mots secrets sont regroupés par mots entiers ; leur taille s’adapte au plus long mot sans coupure arbitraire ni tiret ajouté. Les 192 mots/expressions ont été vérifiés aux largeurs 320, 360, 390 et 430 px. Le thème Internet privilégie des références connues et des situations du quotidien connecté.
+
+
+## Vérifications contre les pages blanches
+
+`npm run test:e2e` lance les tests Playwright sur le build de production sous `/Imposteur/`. En local, installer Chromium avec `npx playwright install chromium`, ou renseigner `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` pour utiliser un Chromium existant.
+
+Le déploiement est bloqué si les tests de navigateur échouent : ouverture, distribution, vote et victoire ; rechargement hors ligne malgré un index périmé ; récupération d’un cache ancien affichant une page blanche ; écran de réparation si le JavaScript manque. Le cache utilise un HTML versionné lié à ses propres fichiers et le déploiement conserve les anciens fichiers statiques pour les pages déjà en cache. La réparation efface uniquement le cache et l’enregistrement du service worker de Voile, sans toucher aux prénoms et réglages.

@@ -19,7 +19,91 @@
     <title>Voile — Le jeu des mots secrets</title>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app">
+      <section
+        id="startup"
+        style="
+          max-width: 440px;
+          margin: 15vh auto;
+          padding: 32px;
+          font: 500 20px/1.5 system-ui;
+          color: #1a1d22;
+          background: #e9ecf0;
+          border-radius: 28px;
+        "
+      >
+        <h1>Voile.</h1>
+        <p id="startup-status">Ouverture du jeu…</p>
+        <button
+          id="startup-repair"
+          hidden
+          style="
+            padding: 16px 24px;
+            border: 0;
+            border-radius: 32px;
+            background: #1a1d22;
+            color: white;
+            font: inherit;
+          "
+        >
+          Réparer l’ouverture</button
+        ><noscript>Active JavaScript pour jouer à Voile.</noscript>
+      </section>
+    </div>
+    <script>
+      (function () {
+        function failed() {
+          var message = document.getElementById("startup-status");
+          var repair = document.getElementById("startup-repair");
+          if (message && repair) {
+            message.textContent =
+              "Le jeu n’a pas pu démarrer. Tu peux réparer son cache puis réessayer.";
+            repair.hidden = false;
+          }
+        }
+        window.addEventListener("error", failed, true);
+        window.addEventListener("unhandledrejection", failed);
+        setTimeout(failed, 10000);
+        document.getElementById("startup-repair").onclick = async function () {
+          this.disabled = true;
+          try {
+            var scope = new URL("./", location.href).href;
+            if ("serviceWorker" in navigator) {
+              var registrations =
+                await navigator.serviceWorker.getRegistrations();
+              await Promise.all(
+                registrations
+                  .filter(function (r) {
+                    return r.scope === scope;
+                  })
+                  .map(function (r) {
+                    return r.unregister();
+                  }),
+              );
+            }
+            if ("caches" in window) {
+              var keys = await caches.keys();
+              await Promise.all(
+                keys
+                  .filter(function (k) {
+                    return k.indexOf("imposteur-voile-") === 0;
+                  })
+                  .map(function (k) {
+                    return caches.delete(k);
+                  }),
+              );
+            }
+            var url = new URL("./", location.href);
+            url.searchParams.set("refresh", Date.now());
+            location.replace(url.href);
+          } catch (error) {
+            this.disabled = false;
+            document.getElementById("startup-status").textContent =
+              "Réparation indisponible. Ferme Voile puis réessaie avec une connexion Internet.";
+          }
+        };
+      })();
+    </script>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
