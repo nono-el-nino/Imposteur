@@ -10,10 +10,9 @@ const browser = await chromium.launch(
 );
 try {
   const page = await browser.newPage();
-  const svg = await readFile(
-    new URL("../public/icon.svg", import.meta.url),
-    "utf8",
-  );
+  const logo = (
+    await readFile(new URL("../public/logo.png", import.meta.url))
+  ).toString("base64");
   for (const [size, name] of [
     [192, "icon-192"],
     [512, "icon-512"],
@@ -22,7 +21,7 @@ try {
   ]) {
     await page.setViewportSize({ width: size, height: size });
     await page.setContent(
-      `<style>body{margin:0;background:#E9ECF0}svg{width:100vw;height:100vh}${name === "icon-maskable" ? "svg{width:80vw;height:80vh;margin:10vh 10vw}" : ""}</style>${svg}`,
+      `<style>body{margin:0;background:#E9ECF0}img{display:block;width:100vw;height:100vh}${name === "icon-maskable" ? "img{width:80vw;height:80vh;margin:10vh 10vw}" : ""}</style><img src="data:image/png;base64,${logo}" alt="">`,
     );
     await page.screenshot({
       path: new URL(`../public/${name}.png`, import.meta.url).pathname,

@@ -6,6 +6,8 @@ export const escape = (s) =>
         c
       ],
   );
+export const LogoWordmark = () =>
+  '<span class="logo-wordmark" aria-hidden="true"><span class="logo-f">f</span><span class="logo-sharp">lou</span><span class="logo-dot"></span></span>';
 export const PillButton = (label, action, kind = "primary", extra = "") =>
   `<button class="pill ${kind}" data-action="${action}" ${extra.includes("type=") ? "" : 'type="button"'} ${extra}>${label}</button>`;
 export const GlassSurface = (content, classes = "") =>

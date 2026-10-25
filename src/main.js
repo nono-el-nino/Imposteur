@@ -14,6 +14,7 @@ import {
   PillButton as btn,
   GlassSurface as glass,
   Halo,
+  LogoWordmark,
   PlayerChip,
   letters,
   secretLetters,
@@ -95,7 +96,7 @@ function safeClose() {
   if (t) t.textContent = "Reprendre";
 }
 function header() {
-  return `<header><button class="wordmark" data-action="home" aria-label="Accueil flou.">flou<span>.</span></button><button class="rule-link" data-action="rules">Règles</button></header>`;
+  return `<header><button class="wordmark" data-action="home" aria-label="Accueil flou.">${LogoWordmark()}</button><button class="rule-link" data-action="rules">Règles</button></header>`;
 }
 const meta = (step, label) =>
   `<div class="screen-meta"><span>${label}</span><span class="mono">${step}</span></div>`;
@@ -106,7 +107,7 @@ function counter(title, description, key, value, min, max) {
   return `<div class="counter"><div><h2>${title}</h2><p class="note">${description}</p></div><div class="stepper">${btn("−", `${key}-minus`, "step", `aria-label="Réduire ${title}" ${value <= min ? "disabled" : ""}`)}<output class="mono">${value}</output>${btn("+", `${key}-plus`, "step", `aria-label="Augmenter ${title}" ${value >= max ? "disabled" : ""}`)}</div></div>`;
 }
 function home() {
-  return `<main class="home"><div class="home-copy"><p class="eyebrow">Le jeu des mots à demi dits</p><h1>flou<span>.</span></h1><p class="home-specimen"><span>La vérité.</span><span>Ou presque.</span></p><p class="home-description">Un téléphone passe.<br>Le doute reste.</p></div><div class="home-bottom"><p class="note">3 à 20 joueurs · Ensemble, autour d’une table.</p>${btn("Nouvelle partie", "setup")}<button class="text-button" data-action="rules">Comment jouer ?</button>${installPrompt ? btn("Installer sur mon téléphone", "install", "secondary") : ""}<p class="tiny">Sans compte. Sans bruit. Entre vous.</p></div></main>`;
+  return `<main class="home"><div class="home-copy"><p class="eyebrow">Le jeu des mots à demi dits</p><h1 aria-label="flou.">${LogoWordmark()}</h1><p class="home-specimen"><span>La vérité.</span><span>Ou presque.</span></p><p class="home-description">Un téléphone passe.<br>Le doute reste.</p></div><div class="home-bottom"><p class="note">3 à 20 joueurs · Ensemble, autour d’une table.</p>${btn("Nouvelle partie", "setup")}<button class="text-button" data-action="rules">Comment jouer ?</button>${installPrompt ? btn("Installer sur mon téléphone", "install", "secondary") : ""}<p class="tiny">Sans compte. Sans bruit. Entre vous.</p></div></main>`;
 }
 function setup() {
   const max = Math.ceil(settings.names.length / 2) - 1;
