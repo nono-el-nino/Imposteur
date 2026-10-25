@@ -49,7 +49,7 @@ p {
   margin: 0;
 }
 h1 {
-  font-size: 32px;
+  font-size: 36px;
   line-height: 1.12;
   letter-spacing: -0.025em;
   font-weight: 700;
@@ -57,7 +57,7 @@ h1 {
   overflow-wrap: anywhere;
 }
 h2 {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 500;
   letter-spacing: -0.02em;
 }
@@ -65,29 +65,29 @@ strong {
   font-weight: 500;
 }
 .note {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
   color: var(--brume);
   line-height: 1.45;
 }
 .tiny {
-  font-size: 12px;
+  font-size: 15px;
   line-height: 1.5;
   color: var(--brume);
 }
 .mono {
   font-family: "JetBrains Mono", monospace;
-  font-size: 12px;
+  font-size: 15px;
   font-variant-numeric: tabular-nums;
 }
 .eyebrow {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
   color: var(--brume);
 }
 .intro {
   color: var(--brume);
-  font-size: 17px;
+  font-size: 19px;
   line-height: 1.5;
   margin-bottom: 24px;
 }
@@ -115,13 +115,13 @@ header button {
 .wordmark {
   font-weight: 700;
   letter-spacing: -0.04em;
-  font-size: 23px;
+  font-size: 25px;
 }
 .wordmark span {
   color: var(--brume);
 }
 .rule-link {
-  font-size: 14px;
+  font-size: 16px;
   color: var(--brume);
   min-width: 60px;
 }
@@ -134,7 +134,7 @@ main {
 }
 footer {
   text-align: center;
-  font-size: 12px;
+  font-size: 15px;
   color: var(--brume);
   padding: 16px 24px calc(20px + env(safe-area-inset-bottom));
   max-width: 520px;
@@ -204,7 +204,7 @@ body[data-phase="white"] .halo {
   border-radius: var(--pill);
   min-height: 52px;
   padding: 12px 24px;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 500;
   display: flex;
   align-items: center;
@@ -225,7 +225,7 @@ body[data-phase="white"] .halo {
 .text-button {
   background: none;
   border: 0;
-  font-size: 14px;
+  font-size: 16px;
   color: var(--brume);
   min-height: 44px;
   padding: 12px 16px;
@@ -247,13 +247,13 @@ body[data-phase="white"] .halo {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  font-size: 12px;
+  font-size: 15px;
   color: var(--brume);
   min-height: 24px;
 }
 .screen-meta .mono {
   white-space: nowrap;
-  font-size: 11px;
+  font-size: 14px;
 }
 .home {
   display: flex;
@@ -264,7 +264,7 @@ body[data-phase="white"] .halo {
   padding-top: 38px;
 }
 .home h1 {
-  font-size: 72px;
+  font-size: 80px;
   letter-spacing: -0.065em;
   margin: 16px -10px 24px;
   line-height: 1.1;
@@ -282,7 +282,7 @@ body[data-phase="home"] header .wordmark {
   align-items: center;
   justify-content: center;
   min-height: 180px;
-  font-size: 52px;
+  font-size: 56px;
   font-weight: 700;
   letter-spacing: -0.035em;
   line-height: 1.05;
@@ -295,16 +295,16 @@ body[data-phase="home"] header .wordmark {
 }
 .home-specimen span:last-child {
   font-weight: 400;
-  font-size: 40px;
+  font-size: 44px;
   filter: blur(0.3px);
 }
 .home-description {
-  font-size: 20px;
+  font-size: 22px;
   line-height: 1.4;
   margin: 24px auto 32px;
 }
 .home-bottom > .note {
-  font-size: 12px;
+  font-size: 15px;
   margin-bottom: 20px;
 }
 .home-bottom .tiny {
@@ -314,7 +314,7 @@ body[data-phase="home"] header .wordmark {
   margin-bottom: 16px;
 }
 .summary {
-  font-size: 15px;
+  font-size: 17px;
   color: var(--brume);
   margin: 0 0 24px;
 }
@@ -332,7 +332,7 @@ body[data-phase="home"] header .wordmark {
   border-top: 1px solid #1a1d2217;
 }
 .counter .note {
-  font-size: 12px;
+  font-size: 15px;
   margin-top: 5px;
   max-width: 160px;
 }
@@ -345,7 +345,7 @@ body[data-phase="home"] header .wordmark {
 .stepper output {
   width: 26px;
   text-align: center;
-  font-size: 16px;
+  font-size: 18px;
 }
 .pill.step {
   width: 44px;
@@ -355,7 +355,7 @@ body[data-phase="home"] header .wordmark {
   padding: 0;
   background: var(--verre);
   border-color: var(--verre-filet);
-  font-size: 24px;
+  font-size: 26px;
 }
 .section-heading {
   display: flex;
@@ -364,7 +364,7 @@ body[data-phase="home"] header .wordmark {
   margin: 32px 0 16px;
 }
 .section-heading .note {
-  font-size: 12px;
+  font-size: 15px;
 }
 .theme-list {
   display: grid;
@@ -386,22 +386,22 @@ body[data-phase="home"] header .wordmark {
 }
 .theme .mono {
   color: var(--brume);
-  font-size: 10px;
+  font-size: 13px;
 }
 .theme strong {
   display: block;
-  font-size: 17px;
+  font-size: 19px;
 }
 .theme small {
   display: block;
-  font-size: 12px;
+  font-size: 15px;
   color: var(--brume);
   line-height: 1.4;
   margin-top: 3px;
 }
 .selection {
   margin-left: auto;
-  font-size: 20px;
+  font-size: 22px;
   min-width: 16px;
 }
 .options {
@@ -414,21 +414,21 @@ body[data-phase="home"] header .wordmark {
   align-items: center;
   gap: 12px;
   min-height: 72px;
-  font-size: 15px;
+  font-size: 17px;
 }
 .setting + .setting {
   border-top: 1px solid #1a1d2217;
 }
 .setting small {
   display: block;
-  font-size: 12px;
+  font-size: 15px;
   color: var(--brume);
   margin-top: 5px;
 }
 select {
   background: transparent;
   border: 0;
-  font-size: 14px;
+  font-size: 16px;
   min-height: 44px;
   max-width: 100px;
 }
@@ -484,7 +484,7 @@ select {
   width: 100%;
   min-width: 0;
   padding: 16px 0;
-  font-size: 17px;
+  font-size: 19px;
   outline: none;
 }
 .name-field:focus-within {
@@ -512,7 +512,7 @@ select {
   text-align: center;
 }
 .display-name {
-  font-size: 56px;
+  font-size: 60px;
   letter-spacing: -0.035em;
   line-height: 1.05;
   margin: 20px 0 24px;
@@ -528,13 +528,13 @@ select {
 }
 .secret-surface {
   margin-top: 20px;
-  padding: 36px 16px 24px;
+  padding: 24px 16px 20px;
   user-select: none;
   -webkit-user-select: none;
   -webkit-touch-callout: none;
 }
 .secret-word {
-  font-size: 56px;
+  font-size: 60px;
   font-weight: 700;
   letter-spacing: -0.035em;
   line-height: 1.15;
@@ -548,7 +548,7 @@ select {
   transform: scale(0.96);
   transition: transform 700ms var(--spring);
 }
-.secret-word > span {
+.secret-word .glyph {
   display: inline-block;
   filter: blur(14px);
   opacity: 0.25;
@@ -559,7 +559,7 @@ select {
     transform 220ms ease-in;
   will-change: filter;
 }
-.revealed .secret-word:not(.white-word) > span {
+.revealed .secret-word:not(.white-word) .glyph {
   filter: blur(0);
   opacity: 1;
   transform: translateY(0);
@@ -580,7 +580,7 @@ select {
   border-radius: var(--pill);
 }
 .secret-explanation {
-  font-size: 15px;
+  font-size: 17px;
   line-height: 1.5;
   color: var(--brume);
   filter: blur(10px);
@@ -593,31 +593,46 @@ select {
 }
 .hold-area {
   position: relative;
-  width: 100px;
-  height: 100px;
-  margin: 20px auto 0;
+  width: 72px;
+  height: 72px;
+  margin: 16px auto 0;
   display: grid;
   place-items: center;
 }
 .hold-button {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   border: 0;
-  background: var(--encre);
+  border-radius: inherit;
+  background: transparent;
   touch-action: none;
-  display: grid;
-  place-items: center;
-  z-index: 1;
+  -webkit-tap-highlight-color: transparent;
+  z-index: 2;
+}
+.hold-button:active {
+  transform: none !important;
+}
+.hold-marker {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--encre);
+  border-radius: 50%;
+  position: relative;
   transition: transform 500ms var(--spring);
 }
-.hold-button span {
-  width: 14px;
-  height: 14px;
-  border: 1px solid #fff9;
+.hold-marker:after {
+  content: "";
+  position: absolute;
+  width: 4px;
+  height: 4px;
   border-radius: 50%;
+  background: var(--encre);
+  inset: 0;
+  margin: auto;
 }
-.holding .hold-button {
+.holding .hold-marker {
   transform: scale(0.86);
 }
 .hold-bubble {
@@ -639,7 +654,7 @@ select {
   opacity: 1;
 }
 .hold-hint {
-  font-size: 14px;
+  font-size: 16px;
   margin-top: 4px;
 }
 #pass-action:not([hidden]) {
@@ -669,10 +684,10 @@ select {
   transition:
     filter var(--standard) var(--out),
     font-size var(--standard) var(--out);
-  font-size: 21px;
+  font-size: 23px;
 }
 .speaker.active {
-  font-size: 32px;
+  font-size: 36px;
   filter: none;
   letter-spacing: -0.025em;
   background: var(--verre);
@@ -681,7 +696,7 @@ select {
 }
 .speaker .note {
   margin-left: auto;
-  font-size: 12px;
+  font-size: 15px;
   white-space: nowrap;
 }
 .speaker strong {
@@ -689,11 +704,11 @@ select {
   min-width: 0;
 }
 .speaker.done {
-  font-size: 17px;
+  font-size: 19px;
   filter: blur(1px);
 }
 .speaker .mono {
-  font-size: 10px;
+  font-size: 13px;
   color: var(--brume);
 }
 .timer-panel {
@@ -730,7 +745,7 @@ select {
   transition: stroke-dashoffset 320ms var(--out);
 }
 #clock {
-  font-size: 20px;
+  font-size: 22px;
 }
 .vote-grid {
   display: grid;
@@ -754,10 +769,10 @@ select {
 }
 .player-chip .mono {
   color: var(--brume);
-  font-size: 10px;
+  font-size: 13px;
 }
 .player-chip strong {
-  font-size: 20px;
+  font-size: 22px;
   overflow-wrap: anywhere;
   max-width: 100%;
 }
@@ -765,7 +780,7 @@ select {
   position: absolute;
   top: 16px;
   right: 16px;
-  font-size: 14px;
+  font-size: 16px;
 }
 .has-selection .player-chip:not(.selected) {
   filter: blur(3px);
@@ -776,7 +791,7 @@ select {
   border-color: var(--encre);
 }
 .role-reveal {
-  font-size: 56px;
+  font-size: 60px;
   letter-spacing: -0.035em;
   line-height: 1.05;
 }
@@ -802,7 +817,7 @@ select {
 .guess-input {
   width: 100%;
   padding: 20px 24px;
-  font-size: 20px;
+  font-size: 22px;
   margin: 32px 0 20px;
   border-radius: var(--pill);
   min-height: 60px;
@@ -812,7 +827,7 @@ select {
   margin: 48px 0 32px;
 }
 .ending-title h1 {
-  font-size: 44px;
+  font-size: 48px;
   line-height: 1.05;
   letter-spacing: -0.035em;
   margin-top: 16px;
@@ -830,7 +845,7 @@ select {
   gap: 8px;
 }
 .word-recap strong {
-  font-size: 24px;
+  font-size: 26px;
   overflow-wrap: anywhere;
   font-weight: 700;
   letter-spacing: -0.025em;
@@ -857,7 +872,7 @@ select {
 }
 .recap-word {
   text-align: right;
-  font-size: 15px;
+  font-size: 17px;
   max-width: 55%;
   animation: recap-focus 560ms var(--out) both;
   animation-delay: calc(var(--i) * 60ms);
@@ -875,7 +890,7 @@ select {
   background: var(--verre);
   border: 1px solid var(--brume);
   border-radius: 24px;
-  font-size: 15px;
+  font-size: 17px;
   margin-top: 24px;
 }
 .modal-backdrop {
@@ -898,7 +913,7 @@ select {
   background: #ffffffbf;
 }
 .modal h2 {
-  font-size: 32px;
+  font-size: 36px;
   line-height: 1.1;
   margin: 16px 0 24px;
   font-weight: 700;
@@ -906,7 +921,7 @@ select {
 }
 .modal li {
   padding: 0 0 16px 8px;
-  font-size: 16px;
+  font-size: 18px;
   line-height: 1.5;
 }
 .modal ol {
@@ -960,7 +975,7 @@ select {
     padding-inline: 20px;
   }
   .home h1 {
-    font-size: 62px;
+    font-size: 68px;
   }
   .counter {
     gap: 4px;
@@ -976,7 +991,7 @@ select {
   }
   .display-name,
   .role-reveal {
-    font-size: 48px;
+    font-size: 52px;
   }
   .home-specimen {
     min-height: 140px;
@@ -993,11 +1008,11 @@ select {
   .halo {
     animation: none !important;
   }
-  .secret-word > span {
+  .secret-word .glyph {
     filter: blur(14px);
     transform: none;
   }
-  .revealed .secret-word:not(.white-word) > span {
+  .revealed .secret-word:not(.white-word) .glyph {
     filter: none;
   }
   .white-bar {
@@ -1019,4 +1034,47 @@ select {
 }
 .halo-field {
   z-index: 0;
+}
+
+/* A large reading surface, without a large visible control. */
+.secret-surface {
+  position: relative;
+}
+.secret-word {
+  display: block;
+  text-align: center;
+  line-height: 1.12;
+}
+.word-unit {
+  display: inline-block;
+  white-space: nowrap;
+}
+.secret-screen .center-copy {
+  width: 100%;
+}
+.hold-area {
+  pointer-events: none;
+}
+.hold-hint {
+  font-size: 16px;
+}
+@media (max-width: 360px) {
+  .counter {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .counter .note {
+    max-width: none;
+  }
+  .counter .stepper {
+    margin-left: auto;
+  }
+  .section-heading {
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .section-heading .note {
+    max-width: 110px;
+    text-align: right;
+  }
 }

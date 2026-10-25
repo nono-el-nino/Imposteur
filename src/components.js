@@ -23,6 +23,37 @@ export function letters(text) {
     )
     .join("");
 }
+// Keep each word intact; wrapping is only allowed at actual spaces.
+export function secretLetters(text) {
+  let offset = 0;
+  const total = Array.from(text).length;
+  return text
+    .split(/(\s+)/u)
+    .map((part) => {
+      if (/^\s+$/u.test(part)) {
+        offset += part.length;
+        return " ";
+      }
+      const glyphs = Array.from(part)
+        .map((c) => {
+          const i = offset++;
+          return `<span class="glyph" style="--delay:${Math.abs(i - (total - 1) / 2) * 35}ms">${escape(c)}</span>`;
+        })
+        .join("");
+      return `<span class="word-unit">${glyphs}</span>`;
+    })
+    .join("");
+}
+export function fitSecretWord(word) {
+  if (word.classList.contains("white-word") || !word.clientWidth) return;
+  word.style.fontSize = "";
+  const size = parseFloat(getComputedStyle(word).fontSize);
+  const widest = Math.max(
+    ...Array.from(word.querySelectorAll(".word-unit"), (el) => el.offsetWidth),
+  );
+  if (widest > word.clientWidth - 4)
+    word.style.fontSize = `${Math.floor((size * (word.clientWidth - 4)) / widest)}px`;
+}
 export class FocusTransition {
   constructor(root) {
     this.root = root;
@@ -91,6 +122,12 @@ export class HoldToReveal {
     this.button = root.querySelector("[data-hold]");
     this.word = root.querySelector(".secret-word");
     this.onRead = onRead;
+    this.resize = new ResizeObserver(() => fitSecretWord(this.word));
+    this.resize.observe(this.word);
+    fitSecretWord(this.word);
+    document.fonts.ready.then(() => {
+      if (this.word.isConnected) fitSecretWord(this.word);
+    });
     this.doubleTap = doubleTap;
     this.lastTap = -1000;
     this.active = false;
@@ -197,6 +234,7 @@ export class HoldToReveal {
   }
   destroy() {
     this.close();
+    this.resize.disconnect();
     this.abort.abort();
   }
 }

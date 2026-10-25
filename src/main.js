@@ -15,6 +15,7 @@ import {
   Halo,
   PlayerChip,
   letters,
+  secretLetters,
   FocusTransition,
   HoldToReveal,
 } from "./components.js";
@@ -89,7 +90,7 @@ function safeClose() {
   if (t) t.textContent = "Reprendre";
 }
 function header() {
-  return `<header><button class="wordmark" data-action="home" aria-label="Accueil Imposteur">imposteur<span>.</span></button><button class="rule-link" data-action="rules">Règles</button></header>`;
+  return `<header><button class="wordmark" data-action="home" aria-label="Accueil Voile">voile<span>.</span></button><button class="rule-link" data-action="rules">Règles</button></header>`;
 }
 const meta = (step, label) =>
   `<div class="screen-meta"><span>${label}</span><span class="mono">${step}</span></div>`;
@@ -100,7 +101,7 @@ function counter(title, description, key, value, min, max) {
   return `<div class="counter"><div><h2>${title}</h2><p class="note">${description}</p></div><div class="stepper">${btn("−", `${key}-minus`, "step", `aria-label="Réduire ${title}" ${value <= min ? "disabled" : ""}`)}<output class="mono">${value}</output>${btn("+", `${key}-plus`, "step", `aria-label="Augmenter ${title}" ${value >= max ? "disabled" : ""}`)}</div></div>`;
 }
 function home() {
-  return `<main class="home"><div class="home-copy"><p class="eyebrow">Le jeu des mots à demi dits</p><h1>imposteur<span>.</span></h1><div class="home-specimen" aria-hidden="true"><span>la vérité</span><span>presque</span></div><p class="home-description">Un téléphone passe.<br>Le doute reste.</p></div><div class="home-bottom"><p class="note">3 à 20 joueurs · Ensemble, autour d’une table.</p>${btn("Nouvelle partie", "setup")}<button class="text-button" data-action="rules">Comment jouer ?</button>${installPrompt ? btn("Installer sur mon téléphone", "install", "secondary") : ""}<p class="tiny">Sans compte. Sans bruit. Entre vous.</p></div></main>`;
+  return `<main class="home"><div class="home-copy"><p class="eyebrow">Le jeu des mots à demi dits</p><h1>voile<span>.</span></h1><div class="home-specimen" aria-hidden="true"><span>la vérité</span><span>presque</span></div><p class="home-description">Un téléphone passe.<br>Le doute reste.</p></div><div class="home-bottom"><p class="note">3 à 20 joueurs · Ensemble, autour d’une table.</p>${btn("Nouvelle partie", "setup")}<button class="text-button" data-action="rules">Comment jouer ?</button>${installPrompt ? btn("Installer sur mon téléphone", "install", "secondary") : ""}<p class="tiny">Sans compte. Sans bruit. Entre vous.</p></div></main>`;
 }
 function setup() {
   const max = Math.ceil(settings.names.length / 2) - 1;
@@ -115,7 +116,7 @@ function pass() {
 }
 function secret() {
   const p = game.players[index];
-  return `<main class="center-screen secret-screen">${meta(`${index + 1} / ${game.players.length}`, esc(p.name))}<div class="center-copy"><p class="eyebrow">Ton mot, entre nous</p><div class="secret-surface glass"><div class="secret-word ${p.role === "white" ? "white-word" : ""}" aria-hidden="true">${p.role === "white" ? '<span class="white-bar"></span>' : letters(p.word)}</div><p class="secret-explanation" aria-hidden="true">${p.role === "white" ? "Tu es Mr White.<br>Tu n’as pas de mot. Écoute bien." : "Garde ce mot pour toi.<br>Ton rôle reste à découvrir."}</p><div class="hold-area"><span class="hold-bubble" aria-hidden="true"></span><button class="hold-button" data-hold aria-label="${settings.doubleTap ? "Deux appuis pour lire" : "Maintenir pour lire"}" aria-expanded="false"><span></span></button></div><p class="hold-hint note">${settings.doubleTap ? "Deux appuis pour lire.<br>Un appui pour refermer." : "Maintiens pour lire.<br>Relâche pour voiler."}</p></div></div>${bottom(`<div id="pass-action" hidden>${btn("C’est vu, je passe", "hide")}</div><p class="tiny">Le secret se voile aussi en quittant l’application.</p>`)}</main>`;
+  return `<main class="center-screen secret-screen">${meta(`${index + 1} / ${game.players.length}`, esc(p.name))}<div class="center-copy"><p class="eyebrow">Ton mot, entre nous</p><div class="secret-surface glass"><div class="secret-word ${p.role === "white" ? "white-word" : ""}" aria-hidden="true">${p.role === "white" ? '<span class="white-bar"></span>' : secretLetters(p.word)}</div><p class="secret-explanation" aria-hidden="true">${p.role === "white" ? "Tu es Mr White.<br>Tu n’as pas de mot. Écoute bien." : "Garde ce mot pour toi.<br>Ton rôle reste à découvrir."}</p><div class="hold-area" aria-hidden="true"><span class="hold-bubble"></span><span class="hold-marker"></span></div><button class="hold-button" data-hold aria-label="${settings.doubleTap ? "Deux appuis pour lire" : "Maintenir la carte pour lire"}" aria-expanded="false"></button><p class="hold-hint note">${settings.doubleTap ? "Deux appuis sur la carte pour lire.<br>Un appui pour refermer." : "Maintiens n’importe où sur la carte.<br>Relâche pour voiler."}</p></div></div>${bottom(`<div id="pass-action" hidden>${btn("C’est vu, je passe", "hide")}</div><p class="tiny">Le secret se voile aussi en quittant l’application.</p>`)}</main>`;
 }
 function table() {
   return `<main class="center-screen">${meta("03 / 03", "Tout le monde sait. Ou presque.")}<div class="center-copy"><p class="eyebrow">Les mots sont distribués</p><h1>Posez le téléphone<br>au milieu.</h1><p class="intro">Un indice chacun.<br>Le débat se passe entre vous.</p></div>${bottom(btn("Commencer le tour", "begin"))}</main>`;

@@ -1,4 +1,4 @@
-# Imposteur ◈
+# Voile
 
 Jeu de soirée en français sur un seul téléphone, pour 3 à 20 personnes. Application web responsive sans compte, backend ni clé API. Adaptation du jeu de déduction à deux mots : civils, imposteurs et Mr White.
 
@@ -24,7 +24,7 @@ Publier le contenu de `dist/` sur un hébergeur statique. Aucune configuration s
 ## Jouer
 
 1. Inscrire les prénoms, choisir le nombre d'imposteurs et de Mr White, puis un ou plusieurs thèmes. Les civils doivent rester majoritaires au départ.
-2. Passer le téléphone au joueur indiqué. Il maintient la pastille 450 ms pour lire son mot, puis relâche pour le voiler avant de passer le téléphone. Un écran neutre confirme chaque destinataire. Les civils et imposteurs ne connaissent pas explicitement leur rôle. Mr White sait qu'il n'a pas de mot.
+2. Passer le téléphone au joueur indiqué. Il maintient la carte 450 ms pour lire son mot, puis relâche pour le voiler avant de passer le téléphone. Un écran neutre confirme chaque destinataire. Les civils et imposteurs ne connaissent pas explicitement leur rôle. Mr White sait qu'il n'a pas de mot.
 3. Donner chacun un indice sans prononcer, traduire ou épeler le mot. Le premier joueur n'est jamais Mr White ; les tours suivants sont mélangés parmi les survivants. Discuter, avec ou sans chronomètre.
 4. Voter à voix haute et sélectionner le joueur choisi sur le téléphone. En cas d'égalité, discuter et revoter : aucune élimination arbitraire. Confirmer révèle le rôle et élimine le joueur.
 5. Un Mr White éliminé fait **une tentative** pour deviner le mot des civils. Correspondance exacte hors casse, accents, espaces et ponctuation. S'il réussit, il gagne seul. Sinon, la partie continue.
@@ -47,7 +47,7 @@ Le workflow `.github/workflows/pages.yml` teste et compile le site à chaque pus
 
 ## Interface Voile et installation mobile
 
-Direction artistique givrée, verre dépoli, halos de phase et transitions de mise au point. Les couleurs, polices et jetons de mouvement sont centralisés dans `src/theme.css`. Les composants visuels et la lecture protégée sont dans `src/components.js`. Le moteur et les 96 paires de `src/game.js` restent inchangés.
+Direction artistique givrée, verre dépoli, halos de phase et transitions de mise au point. Les couleurs, polices et jetons de mouvement sont centralisés dans `src/theme.css`. Les composants visuels et la lecture protégée sont dans `src/components.js`. Le moteur est dans `src/game.js`, avec 96 paires dont les références Internet ont été simplifiées.
 
 - L’appui long révèle après 450 ms. Le bouton de passage devient disponible après une lecture complète. Le relâchement, Échap, le changement d’application ou la perte de focus referment le secret.
 - Option double appui dans les réglages : deux appuis rapides pour lire, un pour refermer, fermeture automatique après 7 secondes. Au clavier : Espace/Entrée maintenu, ou bascule en mode alternatif.
@@ -60,3 +60,6 @@ Sur iPhone : ouvrir le site dans Safari, puis **Partager → Sur l’écran d’
 Après une première ouverture connectée et la mise en cache terminée, le jeu et les polices fonctionnent hors ligne. La mise en cache ne conserve que les fichiers statiques, jamais la partie. Les mises à jour s’activent après fermeture de tous les onglets/fenêtres de l’application ; aucune mise à jour ne force l’interruption d’une partie en cours.
 
 Validation Voile : tests des règles, build, parcours Chromium mobile (appui interrompu/complet, Mr White, double appui, vote et victoire), rechargement hors ligne sous `/Imposteur/`, lecture au clavier et réduction des animations. L’installation dans l’interface système iOS/Android reste à vérifier sur appareil physique.
+
+
+Lisibilité : textes agrandis, nom et icônes Voile, carte entière sensible à l’appui. Les mots secrets sont regroupés par mots entiers ; leur taille s’adapte au plus long mot sans coupure arbitraire ni tiret ajouté. Les 192 mots/expressions ont été vérifiés aux largeurs 320, 360, 390 et 430 px. Le thème Internet privilégie des références connues et des situations du quotidien connecté.
