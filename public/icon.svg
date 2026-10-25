@@ -1,1 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512"><defs><filter id="b"><feGaussianBlur stdDeviation="28"/></filter></defs><rect width="512" height="512" rx="112" fill="#E9ECF0"/><circle cx="300" cy="220" r="125" fill="#9CBEDC" filter="url(#b)"/><text x="256" y="330" font-family="sans-serif" font-weight="700" font-size="260" text-anchor="middle" fill="#1A1D22">f.</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs><filter id="halo" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="22"/></filter></defs>
+  <rect width="512" height="512" rx="112" fill="#E9ECF0"/>
+  <circle cx="315" cy="332" r="65" fill="#77ADE8" opacity=".95" filter="url(#halo)"/>
+  <text x="162" y="350" font-family="Arial, sans-serif" font-weight="700" font-size="300" fill="#1A1D22">f</text>
+  <circle cx="315" cy="332" r="20" fill="#1A1D22"/>
+</svg>

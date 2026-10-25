@@ -17,11 +17,11 @@ export default defineConfig({
         );
         const files = [
           "manifest.webmanifest",
-          "icon.svg",
-          "icon-192.png",
-          "icon-512.png",
-          "icon-maskable.png",
-          "apple-touch-icon.png",
+          "icon.svg?v=point-bleu",
+          "icon-192.png?v=point-bleu",
+          "icon-512.png?v=point-bleu",
+          "icon-maskable.png?v=point-bleu",
+          "apple-touch-icon.png?v=point-bleu",
           ...Object.keys(bundle).filter((name) => name !== "index.html"),
         ];
         const hash = createHash("sha256")

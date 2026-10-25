@@ -284,9 +284,9 @@ body[data-phase="home"] header .wordmark {
   user-select: none;
 }
 .home-specimen span:first-child {
-  filter: blur(9px);
+  filter: blur(2px);
   color: var(--brume);
-  opacity: 0.65;
+  opacity: 0.9;
 }
 .home-specimen span:last-child {
   font-weight: 400;
@@ -1023,7 +1023,7 @@ select {
     filter: blur(14px) !important;
   }
   .home-specimen span:first-child {
-    filter: blur(9px);
+    filter: blur(2px);
   }
   .recap-word,
   .role-reveal > span {
