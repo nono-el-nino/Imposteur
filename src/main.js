@@ -1,5 +1,6 @@
 import "./theme.css";
 import "./style.css";
+import { startHaloMotion } from "./halo-motion.js";
 import {
   themes,
   validate,
@@ -76,6 +77,7 @@ let screen = "home",
   secretControl = null,
   installPrompt = null;
 document.body.insertAdjacentHTML("afterbegin", Halo());
+startHaloMotion(document.querySelector(".halo-field"));
 const transition = new FocusTransition(app);
 function save() {
   try {

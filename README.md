@@ -74,4 +74,4 @@ Le déploiement est bloqué si les tests de navigateur échouent : ouverture, di
 
 Pendant le débat et le vote, « Revoir ma carte » permet aux joueurs encore en jeu de choisir leur prénom puis de confirmer leur identité sur un écran neutre. Le mot reste sous appui long (ou double appui). Le retour masque le mot et conserve le tour, le joueur actif et le choix de vote ; un chrono en cours est mis en pause puis repris. La confirmation repose sur les joueurs : sur un téléphone partagé, elle ne constitue pas une authentification technique.
 
-Les deux halos suivent des trajectoires distinctes à étapes irrégulières, sur 47 et 67 secondes (59 secondes pour le halo principal de l’accueil). Ils traversent plusieurs zones de l’écran et s’arrêtent si la réduction des animations est activée.
+Deux halos bleus bien visibles suivent des mouvements continus indépendants. Leurs trajectoires et vitesses varient doucement, sans boucle fixe ni arrêt aux points de passage. Le mouvement se limite à 30 images par seconde et se suspend en arrière-plan ou si la réduction des animations est activée.

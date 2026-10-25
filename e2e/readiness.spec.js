@@ -208,23 +208,32 @@ test("flou branding and independent wandering halos respect reduced motion", asy
     (await (await request.get("/Imposteur/manifest.webmanifest")).json())
       .short_name,
   ).toBe("flou.");
-  const motion = await page
-    .locator(".halo")
-    .evaluateAll((items) =>
+  await expect(page.locator(".halo")).toHaveCount(2);
+  const sample = () =>
+    page.locator(".halo").evaluateAll((items) =>
       items.map((el) => ({
-        name: getComputedStyle(el).animationName,
-        duration: getComputedStyle(el).animationDuration,
-        frames: el.getAnimations()[0].effect.getKeyframes().length,
+        transform: el.style.transform,
+        opacity: parseFloat(getComputedStyle(el).opacity),
       })),
     );
-  expect(motion.map((x) => x.name)).toEqual(["drift", "drift-secondary"]);
-  expect(motion.map((x) => x.duration)).toEqual(["59s", "67s"]);
-  expect(motion.every((x) => x.frames > 4)).toBeTruthy();
+  const before = await sample();
+  expect(before.every((h) => h.opacity >= 0.7)).toBeTruthy();
+  expect(before[0].transform).not.toBe(before[1].transform);
+  await page.waitForTimeout(600);
+  const after = await sample();
+  expect(after[0].transform).not.toBe(before[0].transform);
+  expect(after[1].transform).not.toBe(before[1].transform);
   await page.emulateMedia({ reducedMotion: "reduce" });
-  expect(
-    await page
-      .locator(".halo")
-      .first()
-      .evaluate((el) => getComputedStyle(el).animationName),
-  ).toBe("none");
+  await page.evaluate(
+    () =>
+      new Promise((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(resolve)),
+      ),
+  );
+  const still = await sample();
+  await page.waitForTimeout(300);
+  expect(await sample()).toEqual(still);
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.waitForTimeout(100);
+  expect(await sample()).not.toEqual(still);
 });
