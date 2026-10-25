@@ -206,15 +206,9 @@ export class HoldToReveal {
         try {
           navigator.vibrate?.(12);
         } catch {}
-        this.readTimer = setTimeout(
-          () => {
-            if (this.active) {
-              this.read = true;
-              this.onRead();
-            }
-          },
-          560 + this.word.textContent.length * 18,
-        );
+        // Reading speed is the player's decision, not the animation's duration.
+        this.read = true;
+        this.onRead();
       },
       this.doubleTap ? 0 : 450,
     );
@@ -223,7 +217,6 @@ export class HoldToReveal {
   close() {
     this.active = false;
     clearTimeout(this.revealTimer);
-    clearTimeout(this.readTimer);
     clearTimeout(this.autoClose);
     this.root.classList.remove("holding", "revealed");
     this.word.setAttribute("aria-hidden", "true");

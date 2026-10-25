@@ -633,43 +633,33 @@ select {
   transform: none !important;
 }
 .hold-marker {
-  width: 32px;
-  height: 32px;
-  border: 1px solid var(--encre);
-  border-radius: 50%;
-  position: relative;
-  transition: transform 500ms var(--spring);
-}
-.hold-marker:after {
-  content: "";
-  position: absolute;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
+  width: 56px;
+  height: 56px;
   background: var(--encre);
-  inset: 0;
-  margin: auto;
+  border-radius: 50%;
+  transition: transform var(--standard) var(--out);
 }
 .holding .hold-marker {
-  transform: scale(0.86);
+  transform: scale(0.9);
 }
 .hold-bubble {
   position: absolute;
-  width: 86px;
-  height: 86px;
+  width: 76px;
+  height: 76px;
+  border: 1px solid var(--encre);
   border-radius: 50%;
-  border: 1px solid var(--verre-filet);
-  background: var(--verre);
-  backdrop-filter: blur(24px);
-  transform: scale(0.6);
+  transform: scale(0.8);
   opacity: 0;
   transition:
-    transform 450ms var(--in-out),
+    transform var(--hold) var(--out),
     opacity var(--standard) var(--out);
 }
 .holding .hold-bubble {
-  transform: scale(1.15);
-  opacity: 1;
+  transform: scale(1);
+  opacity: 0.2;
+}
+.pass-slot {
+  min-height: 56px;
 }
 .hold-hint {
   font-size: var(--text-body);
@@ -677,7 +667,7 @@ select {
   line-height: 1.55;
 }
 #pass-action:not([hidden]) {
-  animation: pass-appear 420ms var(--spring);
+  animation: pass-appear 160ms var(--out);
 }
 @keyframes pass-appear {
   from {

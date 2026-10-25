@@ -49,7 +49,7 @@ Le workflow `.github/workflows/pages.yml` teste et compile le site à chaque pus
 
 Direction artistique givrée, verre dépoli, halos de phase et transitions de mise au point. Les couleurs, polices et jetons de mouvement sont centralisés dans `src/theme.css`. Les composants visuels et la lecture protégée sont dans `src/components.js`. Le moteur est dans `src/game.js`, avec 96 paires dont les références Internet ont été simplifiées.
 
-- L’appui long révèle après 450 ms. Le bouton de passage devient disponible après une lecture complète. Le relâchement, Échap, le changement d’application ou la perte de focus referment le secret.
+- L’appui long révèle après 450 ms. Le bouton « C’est bon, j’ai lu » devient disponible dès la révélation à 450 ms, sans attendre la fin des animations, et reste disponible après relâchement. Le relâchement, Échap, le changement d’application ou la perte de focus referment le secret.
 - Option double appui dans les réglages : deux appuis rapides pour lire, un pour refermer, fermeture automatique après 7 secondes. Au clavier : Espace/Entrée maintenu, ou bascule en mode alternatif.
 - Mr White conserve une barre floutée même pendant la lecture ; son rôle devient alors net.
 - Les votes restent collectifs et oraux. L’application enregistre uniquement la personne désignée.
