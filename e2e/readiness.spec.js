@@ -34,14 +34,79 @@ test("first opening, complete distribution, vote and civil victory", async ({
   const civil = words.find((w) => words.filter((x) => x === w).length === 4);
   const white = words.indexOf("Mr White");
   const impostor = words.findIndex((w) => w !== civil && w !== "Mr White");
+  // Re-reading must preserve the running game, timer and active speaker.
+  await page.getByRole("button", { name: "Suivant", exact: true }).click();
+  const active = await page.locator(".speaker.active strong").textContent();
+  await page.getByRole("button", { name: "Démarrer", exact: true }).click();
+  await expect(page.locator("#clock")).not.toHaveText("01:00");
+  const clock = await page.locator("#clock").textContent();
+  await page.getByRole("button", { name: "Revoir ma carte" }).click();
+  await expect(page.locator(".review-list button")).toHaveCount(6);
+  await expect(page.locator(".secret-word")).toHaveCount(0);
+  const reader = words.findIndex((w) => w !== "Mr White");
+  await page.locator(`[data-review="${reader}"]`).click();
+  await expect(page.locator(".secret-word")).toHaveCount(0);
+  await page.getByRole("button", { name: /Je suis/ }).click();
+  await expect(page.locator(".secret-word")).toHaveAttribute(
+    "aria-hidden",
+    "true",
+  );
+  await page.locator("[data-hold]").focus();
+  await page.keyboard.down("Space");
+  await expect(page.locator("#pass-action")).toBeVisible();
+  expect(await page.locator(".secret-word").textContent()).toBe(words[reader]);
+  await page.keyboard.up("Space");
+  await page.evaluate(() => window.dispatchEvent(new Event("blur")));
+  await expect(page.locator(".secret-word")).toHaveAttribute(
+    "aria-hidden",
+    "true",
+  );
+  await page
+    .getByRole("button", { name: "Cacher et revenir à la partie" })
+    .click();
+  await expect(page.locator(".secret-word")).toHaveCount(0);
+  await expect(page.locator(".speaker.active strong")).toHaveText(active);
+  await expect(page.locator("#clock")).toHaveText(clock);
+  await expect(
+    page.getByRole("button", { name: "Pause", exact: true }),
+  ).toBeVisible();
   await page.getByRole("button", { name: "Reporter le vote" }).click();
   await page.locator(`[data-vote="${white}"]`).click();
+  const eliminateName = await page
+    .getByRole("button", { name: /Éliminer/ })
+    .textContent();
+  await page.getByRole("button", { name: "Revoir ma carte" }).click();
+  await page.locator(`[data-review="${white}"]`).click();
+  await page.getByRole("button", { name: /Je suis/ }).click();
+  await page.locator("[data-hold]").focus();
+  await page.keyboard.down("Space");
+  await expect(page.locator("#pass-action")).toBeVisible();
+  await expect(page.locator(".white-bar")).toBeVisible();
+  expect(
+    await page
+      .locator(".white-bar")
+      .evaluate((e) => getComputedStyle(e).filter),
+  ).toBe("blur(14px)");
+  await page.keyboard.up("Space");
+  await page
+    .getByRole("button", { name: "Cacher et revenir à la partie" })
+    .click();
+  await expect(page.getByRole("button", { name: /Éliminer/ })).toHaveText(
+    eliminateName,
+  );
   await page.getByRole("button", { name: /Éliminer/ }).click();
   await page.getByRole("button", { name: "Lui passer le téléphone" }).click();
   await page.getByRole("button", { name: /Je suis/ }).click();
   await page.locator("#guess").fill("réponse volontairement fausse");
   await page.getByRole("button", { name: "Proposer ce mot" }).click();
   await page.getByRole("button", { name: "Continuer", exact: true }).click();
+  await page.getByRole("button", { name: "Revoir ma carte" }).click();
+  await expect(page.locator(".review-list button")).toHaveCount(5);
+  await expect(page.locator(`[data-review="${white}"]`)).toHaveCount(0);
+  await page
+    .getByRole("button", { name: "Revenir à la partie", exact: true })
+    .click();
+
   await page.getByRole("button", { name: "Reporter le vote" }).click();
   await page.locator(`[data-vote="${impostor}"]`).click();
   await page.getByRole("button", { name: /Éliminer/ }).click();
@@ -128,4 +193,38 @@ test("missing JS shows recovery and can restart without clearing names", async (
   ).toBeVisible();
   expect(await page.evaluate(() => localStorage.getItem("kept"))).toBe("yes");
   await context.close();
+});
+
+test("flou branding and independent wandering halos respect reduced motion", async ({
+  page,
+  request,
+}) => {
+  await page.goto("/Imposteur/");
+  await expect(page).toHaveTitle("flou. — Le jeu des mots secrets");
+  await expect(
+    page.getByRole("heading", { name: "flou.", exact: true }),
+  ).toBeVisible();
+  expect(
+    (await (await request.get("/Imposteur/manifest.webmanifest")).json())
+      .short_name,
+  ).toBe("flou.");
+  const motion = await page
+    .locator(".halo")
+    .evaluateAll((items) =>
+      items.map((el) => ({
+        name: getComputedStyle(el).animationName,
+        duration: getComputedStyle(el).animationDuration,
+        frames: el.getAnimations()[0].effect.getKeyframes().length,
+      })),
+    );
+  expect(motion.map((x) => x.name)).toEqual(["drift", "drift-secondary"]);
+  expect(motion.map((x) => x.duration)).toEqual(["59s", "67s"]);
+  expect(motion.every((x) => x.frames > 4)).toBeTruthy();
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  expect(
+    await page
+      .locator(".halo")
+      .first()
+      .evaluate((el) => getComputedStyle(el).animationName),
+  ).toBe("none");
 });

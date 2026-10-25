@@ -16,7 +16,7 @@
     <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <title>Voile — Le jeu des mots secrets</title>
+    <title>flou. — Le jeu des mots secrets</title>
   </head>
   <body>
     <div id="app">
@@ -32,7 +32,7 @@
           border-radius: 28px;
         "
       >
-        <h1>Voile.</h1>
+        <h1>flou.</h1>
         <p id="startup-status">Ouverture du jeu…</p>
         <button
           id="startup-repair"
@@ -47,7 +47,7 @@
           "
         >
           Réparer l’ouverture</button
-        ><noscript>Active JavaScript pour jouer à Voile.</noscript>
+        ><noscript>Active JavaScript pour jouer à flou.</noscript>
       </section>
     </div>
     <script>
@@ -99,7 +99,7 @@
           } catch (error) {
             this.disabled = false;
             document.getElementById("startup-status").textContent =
-              "Réparation indisponible. Ferme Voile puis réessaie avec une connexion Internet.";
+              "Réparation indisponible. Ferme l’application puis réessaie avec une connexion Internet.";
           }
         };
       })();

@@ -1,4 +1,4 @@
-# Voile
+# flou.
 
 Jeu de soirée en français sur un seul téléphone, pour 3 à 20 personnes. Application web responsive sans compte, backend ni clé API. Adaptation du jeu de déduction à deux mots : civils, imposteurs et Mr White.
 
@@ -45,7 +45,7 @@ Les mots sont gardés secrets jusqu'à la fin de partie, sauf la carte personnel
 Le workflow `.github/workflows/pages.yml` teste et compile le site à chaque push sur `main`, puis le déploie sur Pages. Dans **Settings → Pages → Build and deployment → Source**, sélectionner **GitHub Actions**. Si nécessaire, lancer ensuite **Actions → Deploy to GitHub Pages → Run workflow**. Après succès du déploiement, l'adresse attendue est `https://nono-el-nino.github.io/Imposteur/`. Le lien n'est actif qu'après activation de Pages et réussite du workflow. La configuration Vite utilise des chemins relatifs pour servir les ressources sous `/Imposteur/`.
 
 
-## Interface Voile et installation mobile
+## Interface flou. et installation mobile
 
 Direction artistique givrée, verre dépoli, halos de phase et transitions de mise au point. Les couleurs, polices et jetons de mouvement sont centralisés dans `src/theme.css`. Les composants visuels et la lecture protégée sont dans `src/components.js`. Le moteur est dans `src/game.js`, avec 96 paires dont les références Internet ont été simplifiées.
 
@@ -59,14 +59,19 @@ Sur iPhone : ouvrir le site dans Safari, puis **Partager → Sur l’écran d’
 
 Après une première ouverture connectée et la mise en cache terminée, le jeu et les polices fonctionnent hors ligne. La mise en cache ne conserve que les fichiers statiques, jamais la partie. Les mises à jour du cache s’activent dès que leur installation complète réussit ; elles ne rechargent jamais une partie en cours. Le nouveau contenu apparaît à la prochaine ouverture ou actualisation. Les fichiers des versions précédentes restent disponibles pour les onglets déjà ouverts.
 
-Validation Voile : tests des règles, build, parcours Chromium mobile (appui interrompu/complet, Mr White, double appui, vote et victoire), rechargement hors ligne sous `/Imposteur/`, lecture au clavier et réduction des animations. L’installation dans l’interface système iOS/Android reste à vérifier sur appareil physique.
+Validation flou. : tests des règles, build, parcours Chromium mobile (appui interrompu/complet, Mr White, double appui, vote et victoire), rechargement hors ligne sous `/Imposteur/`, lecture au clavier et réduction des animations. L’installation dans l’interface système iOS/Android reste à vérifier sur appareil physique.
 
 
-Lisibilité : textes agrandis, nom et icônes Voile, carte entière sensible à l’appui. Les mots secrets sont regroupés par mots entiers ; leur taille s’adapte au plus long mot sans coupure arbitraire ni tiret ajouté. Les 192 mots/expressions ont été vérifiés aux largeurs 320, 360, 390 et 430 px. Le thème Internet privilégie des références connues et des situations du quotidien connecté.
+Lisibilité : textes agrandis, nom et icônes flou., carte entière sensible à l’appui. Les mots secrets sont regroupés par mots entiers ; leur taille s’adapte au plus long mot sans coupure arbitraire ni tiret ajouté. Les 192 mots/expressions ont été vérifiés aux largeurs 320, 360, 390 et 430 px. Le thème Internet privilégie des références connues et des situations du quotidien connecté.
 
 
 ## Vérifications contre les pages blanches
 
 `npm run test:e2e` lance les tests Playwright sur le build de production sous `/Imposteur/`. En local, installer Chromium avec `npx playwright install chromium`, ou renseigner `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` pour utiliser un Chromium existant.
 
-Le déploiement est bloqué si les tests de navigateur échouent : ouverture, distribution, vote et victoire ; rechargement hors ligne malgré un index périmé ; récupération d’un cache ancien affichant une page blanche ; écran de réparation si le JavaScript manque. Le cache utilise un HTML versionné lié à ses propres fichiers et le déploiement conserve les anciens fichiers statiques pour les pages déjà en cache. La réparation efface uniquement le cache et l’enregistrement du service worker de Voile, sans toucher aux prénoms et réglages.
+Le déploiement est bloqué si les tests de navigateur échouent : ouverture, distribution, vote et victoire ; rechargement hors ligne malgré un index périmé ; récupération d’un cache ancien affichant une page blanche ; écran de réparation si le JavaScript manque. Le cache utilise un HTML versionné lié à ses propres fichiers et le déploiement conserve les anciens fichiers statiques pour les pages déjà en cache. La réparation efface uniquement le cache et l’enregistrement du service worker de flou., sans toucher aux prénoms et réglages.
+
+
+Pendant le débat et le vote, « Revoir ma carte » permet aux joueurs encore en jeu de choisir leur prénom puis de confirmer leur identité sur un écran neutre. Le mot reste sous appui long (ou double appui). Le retour masque le mot et conserve le tour, le joueur actif et le choix de vote ; un chrono en cours est mis en pause puis repris. La confirmation repose sur les joueurs : sur un téléphone partagé, elle ne constitue pas une authentification technique.
+
+Les deux halos suivent des trajectoires distinctes à étapes irrégulières, sur 47 et 67 secondes (59 secondes pour le halo principal de l’accueil). Ils traversent plusieurs zones de l’écran et s’arrêtent si la réduction des animations est activée.

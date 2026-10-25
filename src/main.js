@@ -70,6 +70,9 @@ let screen = "home",
   remaining = 0,
   interval = null,
   speaker = 0,
+  reviewId = null,
+  reviewReturn = "discussion",
+  reviewTimerWasRunning = false,
   secretControl = null,
   installPrompt = null;
 document.body.insertAdjacentHTML("afterbegin", Halo());
@@ -90,7 +93,7 @@ function safeClose() {
   if (t) t.textContent = "Reprendre";
 }
 function header() {
-  return `<header><button class="wordmark" data-action="home" aria-label="Accueil Voile">voile<span>.</span></button><button class="rule-link" data-action="rules">Règles</button></header>`;
+  return `<header><button class="wordmark" data-action="home" aria-label="Accueil flou.">flou<span>.</span></button><button class="rule-link" data-action="rules">Règles</button></header>`;
 }
 const meta = (step, label) =>
   `<div class="screen-meta"><span>${label}</span><span class="mono">${step}</span></div>`;
@@ -101,7 +104,7 @@ function counter(title, description, key, value, min, max) {
   return `<div class="counter"><div><h2>${title}</h2><p class="note">${description}</p></div><div class="stepper">${btn("−", `${key}-minus`, "step", `aria-label="Réduire ${title}" ${value <= min ? "disabled" : ""}`)}<output class="mono">${value}</output>${btn("+", `${key}-plus`, "step", `aria-label="Augmenter ${title}" ${value >= max ? "disabled" : ""}`)}</div></div>`;
 }
 function home() {
-  return `<main class="home"><div class="home-copy"><p class="eyebrow">Le jeu des mots à demi dits</p><h1>voile<span>.</span></h1><div class="home-specimen" aria-hidden="true"><span>la vérité</span><span>presque</span></div><p class="home-description">Un téléphone passe.<br>Le doute reste.</p></div><div class="home-bottom"><p class="note">3 à 20 joueurs · Ensemble, autour d’une table.</p>${btn("Nouvelle partie", "setup")}<button class="text-button" data-action="rules">Comment jouer ?</button>${installPrompt ? btn("Installer sur mon téléphone", "install", "secondary") : ""}<p class="tiny">Sans compte. Sans bruit. Entre vous.</p></div></main>`;
+  return `<main class="home"><div class="home-copy"><p class="eyebrow">Le jeu des mots à demi dits</p><h1>flou<span>.</span></h1><div class="home-specimen" aria-hidden="true"><span>la vérité</span><span>presque</span></div><p class="home-description">Un téléphone passe.<br>Le doute reste.</p></div><div class="home-bottom"><p class="note">3 à 20 joueurs · Ensemble, autour d’une table.</p>${btn("Nouvelle partie", "setup")}<button class="text-button" data-action="rules">Comment jouer ?</button>${installPrompt ? btn("Installer sur mon téléphone", "install", "secondary") : ""}<p class="tiny">Sans compte. Sans bruit. Entre vous.</p></div></main>`;
 }
 function setup() {
   const max = Math.ceil(settings.names.length / 2) - 1;
@@ -110,20 +113,28 @@ function setup() {
 function names() {
   return `<main>${meta("02 / 03", "Les prénoms")}<h1>Tout le monde<br>a sa place.</h1><p class="intro">Les prénoms restent sur ce téléphone pour la prochaine partie.</p><form id="names-form"><div class="name-list">${settings.names.map((n, i) => `<label class="glass name-field"><span class="mono">${String(i + 1).padStart(2, "0")}</span><input data-player="${i}" value="${esc(n)}" aria-label="Prénom du joueur ${i + 1}" maxlength="24" enterkeyhint="${i === settings.names.length - 1 ? "done" : "next"}" autocomplete="off" required></label>`).join("")}</div>${notice()}${bottom(btn("Distribuer les mots", "start", "primary", 'type="submit"') + btn("Modifier la partie", "setup", "text-button"))}</form></main>`;
 }
-function pass() {
-  const p = game.players[index];
-  return `<main class="center-screen">${meta(`${index + 1} / ${game.players.length}`, "Le téléphone passe")}<div class="center-copy"><p class="eyebrow">Passe le téléphone à</p><h1 class="display-name">${esc(p.name)}<span>.</span></h1><p class="intro">Les autres regardent ailleurs.<br>Ce qui suit est pour toi.</p></div>${bottom(btn(`Je suis ${esc(p.name)}`, "secret"))}</main>`;
+function pass(p = game.players[index], reviewing = false) {
+  return `<main class="center-screen">${meta(reviewing ? "Ta carte" : `${index + 1} / ${game.players.length}`, "Le téléphone passe")}<div class="center-copy"><p class="eyebrow">Passe le téléphone à</p><h1 class="display-name">${esc(p.name)}<span>.</span></h1><p class="intro">Les autres regardent ailleurs.<br>Ce qui suit est pour toi.</p></div>${bottom(btn(`Je suis ${esc(p.name)}`, reviewing ? "review-secret" : "secret") + (reviewing ? btn("Choisir un autre prénom", "review-list", "text-button") : ""))}</main>`;
 }
-function secret() {
-  const p = game.players[index];
-  return `<main class="center-screen secret-screen">${meta(`${index + 1} / ${game.players.length}`, esc(p.name))}<div class="center-copy"><p class="eyebrow">Ton mot, entre nous</p><div class="secret-surface glass"><div class="secret-word ${p.role === "white" ? "white-word" : ""}" aria-hidden="true">${p.role === "white" ? '<span class="white-bar"></span>' : secretLetters(p.word)}</div><p class="secret-explanation" aria-hidden="true">${p.role === "white" ? "Tu es Mr White.<br>Tu n’as pas de mot. Écoute bien." : "Garde ce mot pour toi.<br>Ton rôle reste à découvrir."}</p><div class="hold-area" aria-hidden="true"><span class="hold-bubble"></span><span class="hold-marker"></span></div><button class="hold-button" data-hold aria-label="${settings.doubleTap ? "Deux appuis pour lire" : "Maintenir la carte pour lire"}" aria-expanded="false"></button><p class="hold-hint note">${settings.doubleTap ? "Deux appuis sur la carte pour lire.<br>Un appui pour refermer." : "Maintiens n’importe où sur la carte.<br>Relâche pour voiler."}</p></div></div>${bottom(`<div class="pass-slot"><div id="pass-action" hidden>${btn("C’est bon, j’ai lu", "hide")}</div></div><p class="tiny">Le secret se voile aussi en quittant l’application.</p>`)}</main>`;
+function secret(p = game.players[index], reviewing = false) {
+  return `<main class="center-screen secret-screen">${meta(reviewing ? "Ta carte" : `${index + 1} / ${game.players.length}`, esc(p.name))}<div class="center-copy"><p class="eyebrow">Ton mot, entre nous</p><div class="secret-surface glass"><div class="secret-word ${p.role === "white" ? "white-word" : ""}" aria-hidden="true">${p.role === "white" ? '<span class="white-bar"></span>' : secretLetters(p.word)}</div><p class="secret-explanation" aria-hidden="true">${p.role === "white" ? "Tu es Mr White.<br>Tu n’as pas de mot. Écoute bien." : "Garde ce mot pour toi.<br>Ton rôle reste à découvrir."}</p><div class="hold-area" aria-hidden="true"><span class="hold-bubble"></span><span class="hold-marker"></span></div><button class="hold-button" data-hold aria-label="${settings.doubleTap ? "Deux appuis pour lire" : "Maintenir la carte pour lire"}" aria-expanded="false"></button><p class="hold-hint note">${settings.doubleTap ? "Deux appuis sur la carte pour lire.<br>Un appui pour refermer." : "Maintiens n’importe où sur la carte.<br>Relâche pour voiler."}</p></div></div>${bottom(`<div class="pass-slot"><div id="pass-action" hidden>${btn(reviewing ? "Cacher et revenir à la partie" : "C’est bon, j’ai lu", reviewing ? "review-back" : "hide")}</div></div>${reviewing ? btn("Revenir sans lire", "review-back", "text-button") : ""}<p class="tiny">Le secret se voile aussi en quittant l’application.</p>`)}</main>`;
 }
 function table() {
   return `<main class="center-screen">${meta("03 / 03", "Tout le monde sait. Ou presque.")}<div class="center-copy"><p class="eyebrow">Les mots sont distribués</p><h1>Posez le téléphone<br>au milieu.</h1><p class="intro">Un indice chacun.<br>Le débat se passe entre vous.</p></div>${bottom(btn("Commencer le tour", "begin"))}</main>`;
 }
+function reviewList() {
+  return `<main>${meta("Lecture privée", "La partie est en pause")}<h1>Tu as oublié<br>ton mot ?</h1><p class="intro">Choisis ton prénom, puis prends le téléphone à l’écart des regards.</p><div class="review-list">${game.players
+    .filter((p) => p.alive)
+    .map((p) =>
+      btn(esc(p.name), "review-pick", "secondary", `data-review="${p.id}"`),
+    )
+    .join(
+      "",
+    )}</div>${bottom(btn("Revenir à la partie", "review-back") + (reviewTimerWasRunning ? '<p class="note">Le chrono reprendra à ton retour.</p>' : ""))}</main>`;
+}
 function discussion() {
   const order = game.order.map((id) => game.players[id]).filter((p) => p.alive);
-  return `<main>${meta(`Tour ${game.round}`, `${order.length} joueurs en jeu`)}<h1>${speaker < order.length ? "À toi de parler." : "Place au doute."}</h1><p class="intro">${speaker < order.length ? "Un indice. Sans dire, traduire ou épeler ton mot." : "Échangez vos soupçons. Le vote se fait à voix haute."}</p><div class="speaking-order">${order.map((p, i) => `<div class="speaker ${i === speaker ? "active" : ""} ${i < speaker ? "done" : ""}"><span class="mono">${String(i + 1).padStart(2, "0")}</span><strong>${esc(p.name)}</strong><span class="note">${i < speaker ? "Parlé" : i === speaker ? "À toi" : ""}</span></div>`).join("")}</div>${speaker < order.length ? btn(speaker === order.length - 1 ? "Ouvrir le débat" : "Suivant", "next-speaker", "secondary") : ""}${settings.timer ? glass(`<div class="timer-ring"><svg viewBox="0 0 100 100" aria-hidden="true"><circle class="ring-track" cx="50" cy="50" r="44"/><circle class="ring-value" cx="50" cy="50" r="44" pathLength="100" stroke-dasharray="100" stroke-dashoffset="${100 - (remaining / settings.timer) * 100}"/></svg><strong class="mono" id="clock">${formatTime(remaining)}</strong></div><div><p class="note">Le temps du débat</p>${btn(interval ? "Pause" : remaining === 0 ? "Recommencer" : "Démarrer", "timer", "text-button")}</div>`, "timer-panel") : ""}${bottom(btn("Reporter le vote", "vote") + '<p class="tiny">Désignez ensemble la personne à éliminer.</p>')}</main>`;
+  return `<main>${meta(`Tour ${game.round}`, `${order.length} joueurs en jeu`)}<h1>${speaker < order.length ? "À toi de parler." : "Place au doute."}</h1><p class="intro">${speaker < order.length ? "Un indice. Sans dire, traduire ou épeler ton mot." : "Échangez vos soupçons. Le vote se fait à voix haute."}</p><div class="speaking-order">${order.map((p, i) => `<div class="speaker ${i === speaker ? "active" : ""} ${i < speaker ? "done" : ""}"><span class="mono">${String(i + 1).padStart(2, "0")}</span><strong>${esc(p.name)}</strong><span class="note">${i < speaker ? "Parlé" : i === speaker ? "À toi" : ""}</span></div>`).join("")}</div>${speaker < order.length ? btn(speaker === order.length - 1 ? "Ouvrir le débat" : "Suivant", "next-speaker", "secondary") : ""}${settings.timer ? glass(`<div class="timer-ring"><svg viewBox="0 0 100 100" aria-hidden="true"><circle class="ring-track" cx="50" cy="50" r="44"/><circle class="ring-value" cx="50" cy="50" r="44" pathLength="100" stroke-dasharray="100" stroke-dashoffset="${100 - (remaining / settings.timer) * 100}"/></svg><strong class="mono" id="clock">${formatTime(remaining)}</strong></div><div><p class="note">Le temps du débat</p>${btn(interval ? "Pause" : remaining === 0 ? "Recommencer" : "Démarrer", "timer", "text-button")}</div>`, "timer-panel") : ""}${bottom(btn("Reporter le vote", "vote") + btn("Revoir ma carte", "review", "secondary") + '<p class="tiny">Désignez ensemble la personne à éliminer.</p>')}</main>`;
 }
 function vote() {
   return `<main>${meta("Le vote", "À voix haute, entre vous")}<h1>Qui avez-vous<br>désigné ?</h1><p class="intro">En cas d’égalité, prenez le temps de revoter.</p><div class="vote-grid ${selected !== null ? "has-selection" : ""}">${game.players
@@ -131,7 +142,7 @@ function vote() {
     .map((p, i) => PlayerChip(p, i, selected))
     .join(
       "",
-    )}</div>${bottom((selected !== null ? btn(`Éliminer ${esc(game.players[selected].name)}`, "eliminate") : '<p class="note">Touche le prénom choisi par le groupe.</p>') + btn("Revenir au débat", "discussion", "text-button"))}</main>`;
+    )}</div>${bottom((selected !== null ? btn(`Éliminer ${esc(game.players[selected].name)}`, "eliminate") : '<p class="note">Touche le prénom choisi par le groupe.</p>') + btn("Revoir ma carte", "review", "secondary") + btn("Revenir au débat", "discussion", "text-button"))}</main>`;
 }
 function eliminated() {
   const p = game.players[pending];
@@ -162,6 +173,9 @@ const views = {
   table,
   discussion,
   vote,
+  "review-list": reviewList,
+  "review-pass": () => pass(game.players[reviewId], true),
+  "review-secret": () => secret(game.players[reviewId], true),
   eliminated,
   "white-pass": whitePass,
   "white-guess": whiteGuess,
@@ -186,9 +200,14 @@ function render() {
       views[screen]() +
       `<footer>Un téléphone. Quelques secrets.</footer>` +
       (overlay ? modal() : ""),
-    screen + (screen === "pass" || screen === "secret" ? index : ""),
+    screen +
+      (screen.startsWith("review-")
+        ? reviewId
+        : screen === "pass" || screen === "secret"
+          ? index
+          : ""),
   );
-  if (screen === "secret" && !overlay) {
+  if ((screen === "secret" || screen === "review-secret") && !overlay) {
     secretControl = new HoldToReveal(app.querySelector(".secret-screen"), {
       doubleTap: settings.doubleTap,
       onRead: () => {
@@ -202,6 +221,32 @@ function render() {
     app.querySelector(".modal button")?.focus();
   }
 }
+function toggleTimer() {
+  if (interval) {
+    stopTimer();
+    render();
+    return;
+  }
+  if (!remaining) remaining = settings.timer;
+  interval = setInterval(() => {
+    remaining = Math.max(0, remaining - 1);
+    const clock = app.querySelector("#clock");
+    if (clock) clock.textContent = formatTime(remaining);
+    app
+      .querySelector(".ring-value")
+      ?.setAttribute(
+        "stroke-dashoffset",
+        100 - (remaining / settings.timer) * 100,
+      );
+    if (!remaining) {
+      stopTimer();
+      render();
+    }
+  }, 1000);
+  render();
+  return;
+}
+
 function go(s) {
   safeClose();
   error = "";
@@ -384,6 +429,36 @@ app.addEventListener("click", (e) => {
     render();
     return;
   }
+  if (a === "review" && ["discussion", "vote"].includes(screen)) {
+    reviewReturn = screen;
+    reviewTimerWasRunning = !!interval;
+    reviewId = null;
+    go("review-list");
+    return;
+  }
+  if (a === "review-pick" && screen === "review-list") {
+    const id = Number(el.dataset.review);
+    if (!game.players.some((p) => p.id === id && p.alive)) return;
+    reviewId = id;
+    go("review-pass");
+    return;
+  }
+  if (a === "review-secret" && screen === "review-pass") {
+    go("review-secret");
+    return;
+  }
+  if (a === "review-list" && screen.startsWith("review-")) {
+    go("review-list");
+    return;
+  }
+  if (a === "review-back" && screen.startsWith("review-")) {
+    const resume = reviewTimerWasRunning && reviewReturn === "discussion";
+    reviewId = null;
+    go(reviewReturn);
+    reviewTimerWasRunning = false;
+    if (resume && remaining > 0) toggleTimer();
+    return;
+  }
   if (a === "secret") {
     go("secret");
     return;
@@ -431,28 +506,7 @@ app.addEventListener("click", (e) => {
     return;
   }
   if (a === "timer") {
-    if (interval) {
-      stopTimer();
-      render();
-      return;
-    }
-    if (!remaining) remaining = settings.timer;
-    interval = setInterval(() => {
-      remaining = Math.max(0, remaining - 1);
-      const clock = app.querySelector("#clock");
-      if (clock) clock.textContent = formatTime(remaining);
-      app
-        .querySelector(".ring-value")
-        ?.setAttribute(
-          "stroke-dashoffset",
-          100 - (remaining / settings.timer) * 100,
-        );
-      if (!remaining) {
-        stopTimer();
-        render();
-      }
-    }, 1000);
-    render();
+    toggleTimer();
     return;
   }
   if (a === "install" && installPrompt) {

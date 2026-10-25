@@ -158,9 +158,9 @@ footer {
   background: var(--halo-jeu);
   filter: blur(60px);
   opacity: 0.75;
-  left: calc(50% - 80px);
-  top: 19%;
-  animation: drift 9s var(--in-out) infinite alternate;
+  left: calc(50% - 125px);
+  top: calc(45% - 125px);
+  animation: drift 47s var(--in-out) infinite;
   transition:
     background 600ms var(--out),
     scale var(--drama) var(--out);
@@ -168,13 +168,15 @@ footer {
 .halo.second {
   width: 200px;
   height: 200px;
-  left: calc(50% - 200px);
-  top: 62%;
+  left: calc(50% - 100px);
+  top: calc(50% - 100px);
   opacity: 0.35;
-  animation-delay: -6s;
+  animation-name: drift-secondary;
+  animation-duration: 67s;
+  animation-delay: -23s;
 }
-body[data-phase="home"] .halo {
-  animation-duration: 18s;
+body[data-phase="home"] .halo:not(.second) {
+  animation-duration: 59s;
 }
 body[data-phase="elimination"] .halo {
   background: var(--halo-elimination);
@@ -187,12 +189,48 @@ body[data-phase="white"] .halo {
   background: var(--halo-mrwhite);
 }
 @keyframes drift {
-  from {
-    transform: translate(-30px, 20px);
+  0%,
+  100% {
+    transform: translate(-27vw, -22vh) scale(0.95);
   }
-  to {
-    transform: translate(30px, -30px);
+  14% {
+    transform: translate(23vw, -32vh) scale(1.12);
   }
+  31% {
+    transform: translate(31vw, 6vh) scale(1);
+  }
+  53% {
+    transform: translate(-12vw, 31vh) scale(1.08);
+  }
+  68% {
+    transform: translate(-34vw, 13vh) scale(0.92);
+  }
+  89% {
+    transform: translate(3vw, -8vh) scale(1.1);
+  }
+}
+@keyframes drift-secondary {
+  0%,
+  100% {
+    transform: translate(25vw, 28vh) scale(1.08);
+  }
+  19% {
+    transform: translate(-25vw, 19vh) scale(0.95);
+  }
+  37% {
+    transform: translate(-30vw, -23vh) scale(1.15);
+  }
+  62% {
+    transform: translate(18vw, -31vh) scale(1);
+  }
+  79% {
+    transform: translate(3vw, 9vh) scale(1.12);
+  }
+}
+.review-list {
+  display: grid;
+  gap: 12px;
+  margin-block: 32px;
 }
 .glass {
   background: var(--verre);
@@ -589,6 +627,7 @@ select {
   transform: scale(1);
 }
 .white-bar {
+  display: inline-block;
   width: 180px;
   height: 38px;
   background: var(--encre);
