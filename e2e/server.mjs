@@ -2,12 +2,18 @@ import http from "node:http";
 import { readFile } from "node:fs/promises";
 import { resolve, extname } from "node:path";
 let legacy = false;
+let generation = 0;
 const broken =
   '<!doctype html><html lang="fr"><body><div id="app"></div><script type="module" src="./assets/deleted-version.js"></script></body></html>';
 const legacyWorker = `const C='imposteur-voile-legacy';self.addEventListener('install',e=>e.waitUntil(caches.open(C).then(c=>c.put('./index.html',new Response(${JSON.stringify(broken)},{headers:{'Content-Type':'text/html'}}))).then(()=>self.skipWaiting())));self.addEventListener('activate',e=>e.waitUntil(self.clients.claim()));self.addEventListener('fetch',e=>{if(e.request.mode==='navigate')e.respondWith(caches.open(C).then(c=>c.match('./index.html')));});`;
 http
   .createServer(async (req, res) => {
     const path = new URL(req.url, "http://localhost").pathname;
+    if (path === "/__update") {
+      generation++;
+      res.end("ok");
+      return;
+    }
     if (path === "/__legacy") {
       legacy = true;
       res.end("ok");
@@ -59,7 +65,14 @@ http
         }[extname(file)] || "application/octet-stream",
       );
       res.setHeader("Cache-Control", "no-store");
-      res.end(data);
+      res.end(
+        path === "/Imposteur/sw.js"
+          ? Buffer.concat([
+              data,
+              Buffer.from(`\n// Update test generation ${generation}\n`),
+            ])
+          : data,
+      );
     } catch {
       res.writeHead(404);
       res.end("not found");

@@ -1173,38 +1173,12 @@ select {
 .catalog-summary {
   margin: -4px 0 20px;
 }
-.more-themes {
-  margin-top: 16px;
-}
-.more-themes summary {
-  list-style: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  justify-content: space-between;
-  min-height: 64px;
-  padding: 20px 24px;
-  font-size: var(--text-body);
+.theme-group-title {
+  margin: 28px 0 16px;
+  font-size: var(--text-label);
   font-weight: var(--weight-strong);
+  letter-spacing: -0.02em;
 }
-.more-themes summary::-webkit-details-marker {
-  display: none;
-}
-.more-themes summary:focus-visible {
-  outline: 2px solid var(--encre);
-  outline-offset: 4px;
-}
-.more-themes .fold-sign {
-  flex-shrink: 0;
-  font-size: 24px;
-}
-.more-themes .fold-sign::before {
-  content: "+";
-}
-.more-themes[open] .fold-sign::before {
-  content: "−";
-}
-.more-themes[open] > .theme-list {
-  margin-top: 16px;
+.home-catalog {
+  margin: 12px 0 0;
 }

@@ -260,19 +260,21 @@ test("new single-word themes stay selected and distribute playable secret cards 
       },
     ),
   ).toBeVisible();
-  const more = page.locator("#more-themes");
-  await expect(more).toHaveJSProperty("open", false);
-  await more.locator("summary").click();
-  await expect(more).toHaveJSProperty("open", true);
-  await expect(page.locator('[data-theme="sciences"] .mono')).toHaveText("12");
+  await expect(page.locator("#more-themes")).toHaveCount(0);
+  await expect(page.locator("[data-theme]").first()).toHaveAttribute(
+    "data-theme",
+    "cuisine",
+  );
+  await expect(
+    page.getByRole("heading", { name: "Les 8 nouveautés", exact: true }),
+  ).toBeVisible();
+  await expect(page.locator('[data-theme="sciences"] .mono')).toHaveText("08");
   await page.locator('[data-theme="internet"]').click();
   await page.locator('[data-theme="sciences"]').click();
-  await expect(more).toHaveJSProperty("open", true);
   await page.reload();
   await page
     .getByRole("button", { name: "Nouvelle partie", exact: true })
     .click();
-  await expect(more).toHaveJSProperty("open", true);
   await expect(page.locator('[data-theme="sciences"]')).toHaveAttribute(
     "aria-pressed",
     "true",
@@ -310,4 +312,60 @@ test("new single-word themes stay selected and distribute playable secret cards 
   );
   await page.getByRole("button", { name: "C’est bon, j’ai lu" }).click();
   await expect(page.locator(".secret-word")).toHaveCount(0);
+});
+
+test("updates refresh the idle home but never interrupt a distributed card", async ({
+  page,
+  request,
+}) => {
+  await page.goto("/Imposteur/");
+  await page.evaluate(() => navigator.serviceWorker.ready);
+  await page.waitForFunction(() => navigator.serviceWorker.controller);
+  await request.get("/__update");
+  const refreshed = page.waitForEvent(
+    "framenavigated",
+    (frame) => frame === page.mainFrame(),
+  );
+  await page.evaluate(async () => {
+    const r = await navigator.serviceWorker.getRegistration();
+    void r.update();
+  });
+  await refreshed;
+  await expect(
+    page.getByRole("button", { name: "Nouvelle partie", exact: true }),
+  ).toBeVisible();
+  await start(page);
+  const player = await page.getByRole("heading", { level: 1 }).textContent();
+  await page.evaluate(() => {
+    window.__gamePreserved = true;
+    window.__updateObserved = false;
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      window.__updateObserved = true;
+    });
+  });
+  await request.get("/__update");
+  await page.evaluate(async () => {
+    const r = await navigator.serviceWorker.getRegistration();
+    void r.update();
+  });
+  await page.waitForFunction(() => window.__updateObserved === true);
+  expect(await page.evaluate(() => window.__gamePreserved)).toBe(true);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(player);
+  await page.getByRole("button", { name: /Je suis/ }).click();
+  await page.locator("[data-hold]").focus();
+  await page.keyboard.down("Space");
+  await expect(page.locator("#pass-action")).toBeVisible();
+  await page.keyboard.up("Space");
+  await page
+    .getByRole("button", { name: "Accueil flou.", exact: true })
+    .click();
+  const homeRefreshed = page.waitForEvent(
+    "framenavigated",
+    (frame) => frame === page.mainFrame(),
+  );
+  await page.getByRole("button", { name: "Quitter", exact: true }).click();
+  await homeRefreshed;
+  await expect(
+    page.getByRole("button", { name: "Nouvelle partie", exact: true }),
+  ).toBeVisible();
 });
