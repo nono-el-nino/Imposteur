@@ -60,6 +60,10 @@ try {
     if (![0, 60, 90, 120, 180].includes(settings.timer)) settings.timer = 60;
   }
 } catch {}
+let extraThemesOpen = themes
+  .slice(4)
+  .some((theme) => settings.themeIds.includes(theme.id));
+const totalPairs = themes.reduce((sum, theme) => sum + theme.pairs.length, 0);
 const roles = { civil: "Civil", impostor: "Imposteur", white: "Mr White" };
 let screen = "home",
   game,
@@ -109,9 +113,23 @@ function counter(title, description, key, value, min, max) {
 function home() {
   return `<main class="home"><div class="home-copy"><p class="eyebrow">Le jeu des mots à demi dits</p><h1 aria-label="flou.">${LogoWordmark()}</h1><p class="home-specimen"><span>La vérité.</span><span>Ou presque.</span></p><p class="home-description">Un téléphone passe.<br>Le doute reste.</p></div><div class="home-bottom"><p class="note">3 à 20 joueurs · Ensemble, autour d’une table.</p>${btn("Nouvelle partie", "setup")}<button class="text-button" data-action="rules">Comment jouer ?</button>${installPrompt ? btn("Installer sur mon téléphone", "install", "secondary") : ""}<p class="tiny">Sans compte. Sans bruit. Entre vous.</p></div></main>`;
 }
+function themeCard(theme, index) {
+  const chosen = settings.themeIds.includes(theme.id);
+  return `<button class="glass theme ${chosen ? "chosen" : ""}" data-theme="${theme.id}" aria-pressed="${chosen}"><span class="mono">${String(index + 1).padStart(2, "0")}</span><span><strong>${esc(theme.name)}</strong><small>${esc(theme.description)}</small></span><span class="selection" aria-hidden="true">${chosen ? "✓" : "+"}</span></button>`;
+}
 function setup() {
   const max = Math.ceil(settings.names.length / 2) - 1;
-  return `<main>${meta("01 / 03", "La partie")}<h1>Qui se cache<br>parmi vous ?</h1><p class="summary">${settings.names.length} joueurs, ${settings.impostors} imposteur${settings.impostors > 1 ? "s" : ""}, ${settings.whites} Mr White.</p>${glass(counter("Joueurs", "Tout le monde participe.", "players", settings.names.length, 3, 20) + counter("Imposteurs", "Un mot proche. Un autre camp.", "impostors", settings.impostors, 0, max - settings.whites) + counter("Mr White", "Pas de mot. Juste du bluff.", "whites", settings.whites, 0, max - settings.impostors), "counters")}<div class="section-heading"><h2>Vos références</h2><p class="note">Un thème, ou plusieurs.</p></div><div class="theme-list">${themes.map((t, i) => `<button class="glass theme ${settings.themeIds.includes(t.id) ? "chosen" : ""}" data-theme="${t.id}" aria-pressed="${settings.themeIds.includes(t.id)}"><span class="mono">0${i + 1}</span><span><strong>${t.name}</strong><small>${t.description}</small></span><span class="selection" aria-hidden="true">${settings.themeIds.includes(t.id) ? "✓" : "+"}</span></button>`).join("")}</div>${glass(`<label class="setting" for="timer-select"><span>Temps du débat</span><select id="timer-select">${[0, 60, 90, 120, 180].map((v) => `<option value="${v}" ${settings.timer === v ? "selected" : ""}>${v ? v / 60 + " min" : "Libre"}</option>`).join("")}</select></label><label class="setting" for="double-tap"><span>Lecture par double appui<small>Une alternative à l’appui long.</small></span><input id="double-tap" type="checkbox" role="switch" ${settings.doubleTap ? "checked" : ""}></label>`, "options")}${notice()}${bottom(btn("Choisir les prénoms", "names") + '<p class="tiny">Les civils restent majoritaires au départ.</p>')}</main>`;
+  return `<main>${meta("01 / 03", "La partie")}<h1>Qui se cache<br>parmi vous ?</h1><p class="summary">${settings.names.length} joueurs, ${settings.impostors} imposteur${settings.impostors > 1 ? "s" : ""}, ${settings.whites} Mr White.</p>${glass(counter("Joueurs", "Tout le monde participe.", "players", settings.names.length, 3, 20) + counter("Imposteurs", "Un mot proche. Un autre camp.", "impostors", settings.impostors, 0, max - settings.whites) + counter("Mr White", "Pas de mot. Juste du bluff.", "whites", settings.whites, 0, max - settings.impostors), "counters")}<div class="section-heading"><h2>Vos références</h2><p class="note">Un thème, ou plusieurs.</p></div><p class="note catalog-summary">${themes.length} thèmes · ${totalPairs} paires · Un mot par carte.</p><div class="theme-list">${themes
+    .slice(0, 4)
+    .map((t, i) => themeCard(t, i))
+    .join(
+      "",
+    )}</div><details class="more-themes" id="more-themes" ${extraThemesOpen ? "open" : ""}><summary class="glass"><span>Découvrir ${themes.length - 4} nouveaux thèmes</span><span class="fold-sign" aria-hidden="true"></span></summary><div class="theme-list">${themes
+    .slice(4)
+    .map((t, i) => themeCard(t, i + 4))
+    .join(
+      "",
+    )}</div></details>${glass(`<label class="setting" for="timer-select"><span>Temps du débat</span><select id="timer-select">${[0, 60, 90, 120, 180].map((v) => `<option value="${v}" ${settings.timer === v ? "selected" : ""}>${v ? v / 60 + " min" : "Libre"}</option>`).join("")}</select></label><label class="setting" for="double-tap"><span>Lecture par double appui<small>Une alternative à l’appui long.</small></span><input id="double-tap" type="checkbox" role="switch" ${settings.doubleTap ? "checked" : ""}></label>`, "options")}${notice()}${bottom(btn("Choisir les prénoms", "names") + '<p class="tiny">Les civils restent majoritaires au départ.</p>')}</main>`;
 }
 function names() {
   return `<main>${meta("02 / 03", "Les prénoms")}<h1>Tout le monde<br>a sa place.</h1><p class="intro">Les prénoms restent sur ce téléphone pour la prochaine partie.</p><form id="names-form"><div class="name-list">${settings.names.map((n, i) => `<label class="glass name-field"><span class="mono">${String(i + 1).padStart(2, "0")}</span><input data-player="${i}" value="${esc(n)}" aria-label="Prénom du joueur ${i + 1}" maxlength="24" enterkeyhint="${i === settings.names.length - 1 ? "done" : "next"}" autocomplete="off" required></label>`).join("")}</div>${notice()}${bottom(btn("Distribuer les mots", "start", "primary", 'type="submit"') + btn("Modifier la partie", "setup", "text-button"))}</form></main>`;
@@ -292,6 +310,13 @@ function formatTime(v) {
     .toString()
     .padStart(2, "0")}:${(v % 60).toString().padStart(2, "0")}`;
 }
+app.addEventListener(
+  "toggle",
+  (event) => {
+    if (event.target.id === "more-themes") extraThemesOpen = event.target.open;
+  },
+  true,
+);
 app.addEventListener("input", (e) => {
   if (e.target.dataset.player !== undefined) {
     settings.names[Number(e.target.dataset.player)] = e.target.value;

@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { themes } from "../src/words.js";
 const start = async (page) => {
   await page
     .getByRole("button", { name: "Nouvelle partie", exact: true })
@@ -240,4 +241,73 @@ test("flou branding and independent wandering halos respect reduced motion", asy
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.waitForTimeout(100);
   expect(await sample()).not.toEqual(still);
+});
+
+test("new single-word themes stay selected and distribute playable secret cards on mobile", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 320, height: 844 });
+  await page.goto("/Imposteur/");
+  await page
+    .getByRole("button", { name: "Nouvelle partie", exact: true })
+    .click();
+  await expect(page.locator("[data-theme]")).toHaveCount(themes.length);
+  await expect(
+    page.getByText(
+      `${themes.length} thèmes · ${themes.reduce((n, t) => n + t.pairs.length, 0)} paires · Un mot par carte.`,
+      {
+        exact: true,
+      },
+    ),
+  ).toBeVisible();
+  const more = page.locator("#more-themes");
+  await expect(more).toHaveJSProperty("open", false);
+  await more.locator("summary").click();
+  await expect(more).toHaveJSProperty("open", true);
+  await expect(page.locator('[data-theme="sciences"] .mono')).toHaveText("12");
+  await page.locator('[data-theme="internet"]').click();
+  await page.locator('[data-theme="sciences"]').click();
+  await expect(more).toHaveJSProperty("open", true);
+  await page.reload();
+  await page
+    .getByRole("button", { name: "Nouvelle partie", exact: true })
+    .click();
+  await expect(more).toHaveJSProperty("open", true);
+  await expect(page.locator('[data-theme="sciences"]')).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  await expect(page.locator('[data-theme="internet"]')).toHaveAttribute(
+    "aria-pressed",
+    "false",
+  );
+  await page
+    .getByRole("button", { name: "Réduire Mr White", exact: true })
+    .click();
+  await page.getByRole("button", { name: "Choisir les prénoms" }).click();
+  await page.getByRole("button", { name: "Distribuer les mots" }).click();
+  await expect(page.locator(".secret-word")).toHaveCount(0);
+  await page.getByRole("button", { name: /Je suis/ }).click();
+  await page.locator("[data-hold]").focus();
+  await page.keyboard.down("Space");
+  await expect(page.locator("#pass-action")).toBeVisible();
+  const word = await page.locator(".secret-word").textContent();
+  const allowed = themes.find((t) => t.id === "sciences").pairs.flat();
+  expect(allowed).toContain(word);
+  expect(word).toMatch(/^\p{L}+$/u);
+  await expect(page.locator(".word-unit")).toHaveCount(1);
+  await expect
+    .poll(() =>
+      page
+        .locator(".secret-word")
+        .evaluate((el) => el.scrollWidth <= el.clientWidth + 1),
+    )
+    .toBe(true);
+  await page.keyboard.up("Space");
+  await expect(page.locator(".secret-word")).toHaveAttribute(
+    "aria-hidden",
+    "true",
+  );
+  await page.getByRole("button", { name: "C’est bon, j’ai lu" }).click();
+  await expect(page.locator(".secret-word")).toHaveCount(0);
 });

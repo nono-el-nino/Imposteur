@@ -34,7 +34,7 @@ Ce sont les règles retenues par cette application, avec des variantes possibles
 
 ## Mots et confidentialité
 
-96 paires originales dans `src/game.js` : Internet français, Pop culture, La vie en France et Les valeurs sûres. Les thèmes peuvent être mélangés. Pas de répétition de paire avant épuisement du choix dans la session ; l'orientation civil/imposteur est aléatoire.
+384 paires originales dans `src/words.js`, réparties en 12 thèmes de 32 paires : Internet français, Pop culture, La vie en France, Les valeurs sûres, À table, Bestiaire, Nature & météo, Évasion, Frissons & mystères, Objets inattendus, Corps & esprit et Sciences & curiosités. Chaque carte contient un seul mot, sans espace, tiret ni assemblage artificiel de mots. Les thèmes peuvent être mélangés. Pas de répétition de paire avant épuisement du choix dans la session ; l'orientation civil/imposteur est aléatoire.
 
 Seuls les prénoms et paramètres sont conservés en localStorage. Aucun mot ni rôle sauvegardé, aucune donnée de partie envoyée à un serveur. Un rechargement abandonne donc la manche. Le mot est visuellement flouté et retiré de l’arbre d’accessibilité au relâchement, quand la fenêtre perd le focus ou quand l’application passe en arrière-plan. L’écran neutre de passage ne contient ni mot ni rôle. Cette protection visuelle n'empêche pas une inspection technique du navigateur, une capture d'écran ou quelqu'un qui regarde par-dessus l'épaule. Le propriétaire du téléphone doit aussi jouer sans inspecter le code.
 
@@ -47,7 +47,7 @@ Le workflow `.github/workflows/pages.yml` teste et compile le site à chaque pus
 
 ## Interface flou. et installation mobile
 
-Direction artistique givrée, verre dépoli, halos de phase et transitions de mise au point. Les couleurs, polices et jetons de mouvement sont centralisés dans `src/theme.css`. Les composants visuels et la lecture protégée sont dans `src/components.js`. Le moteur est dans `src/game.js`, avec 96 paires dont les références Internet ont été simplifiées.
+Direction artistique givrée, verre dépoli, halos de phase et transitions de mise au point. Les couleurs, polices et jetons de mouvement sont centralisés dans `src/theme.css`. Les composants visuels et la lecture protégée sont dans `src/components.js`. Le moteur est dans `src/game.js` ; le catalogue de mots est séparé dans `src/words.js`. Les identifiants des quatre thèmes historiques sont conservés pour garder les réglages déjà mémorisés.
 
 - L’appui long révèle après 450 ms. Le bouton « C’est bon, j’ai lu » devient disponible dès la révélation à 450 ms, sans attendre la fin des animations, et reste disponible après relâchement. Le relâchement, Échap, le changement d’application ou la perte de focus referment le secret.
 - Option double appui dans les réglages : deux appuis rapides pour lire, un pour refermer, fermeture automatique après 7 secondes. Au clavier : Espace/Entrée maintenu, ou bascule en mode alternatif.
@@ -62,7 +62,7 @@ Après une première ouverture connectée et la mise en cache terminée, le jeu 
 Validation flou. : tests des règles, build, parcours Chromium mobile (appui interrompu/complet, Mr White, double appui, vote et victoire), rechargement hors ligne sous `/Imposteur/`, lecture au clavier et réduction des animations. L’installation dans l’interface système iOS/Android reste à vérifier sur appareil physique.
 
 
-Lisibilité : textes agrandis, nom et icônes flou., carte entière sensible à l’appui. Les mots secrets sont regroupés par mots entiers ; leur taille s’adapte au plus long mot sans coupure arbitraire ni tiret ajouté. Les 192 mots/expressions ont été vérifiés aux largeurs 320, 360, 390 et 430 px. Le thème Internet privilégie des références connues et des situations du quotidien connecté.
+Lisibilité : textes agrandis, nom et icônes flou., carte entière sensible à l’appui. Les mots secrets sont regroupés par mots entiers ; leur taille s’adapte au plus long mot sans coupure arbitraire ni tiret ajouté. La taille des mots est ajustée sur mobile, sans coupure à l’intérieur du mot. Le thème Internet privilégie des références connues et des situations du quotidien connecté.
 
 
 ## Vérifications contre les pages blanches
@@ -79,3 +79,10 @@ Deux halos bleus bien visibles suivent des mouvements continus indépendants. Le
 Le logo complet « flou. » est enregistré dans `public/logo.png` : f diffus, lou net et halo bleu à la place du point. Le mot-symbole de l’interface utilise la même direction typographique en texte accessible. Après modification, régénérer les formats d’installation avec `node scripts/generate-icons.mjs` (Chromium Playwright installé, ou `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` défini). Les URL des icônes portent une version commune avec le préchargement hors ligne. Le flou d’accueil de « la vérité » est de 2 px ; les cartes secrètes gardent leur flou de protection distinct.
 
 Les halos ont une silhouette SVG qui évolue lentement du rond à l’ovale puis à deux lobes reliés. Les contours restent continus, avec une taille de jonction positive ; la déformation et la rotation se suspendent avec la réduction des animations. La géométrie est actualisée à 10 images par seconde au maximum, indépendamment du déplacement.
+
+
+## Ajouter des mots
+
+Le catalogue contient 32 paires par thème. Chaque entrée doit être un seul mot orthographié normalement (les accents et noms propres sont acceptés) ; ne pas coller des mots ni abréger une expression pour contourner la contrainte. Les paires doivent avoir des indices communs plausibles, tout en conservant une différence exploitable pendant le débat. Les tests refusent les paires identiques après normalisation, les doublons dans les deux sens et les entrées avec espaces ou ponctuation. Ils vérifient aussi l’épuisement sans répétition de chaque thème et d’un mélange de thèmes.
+
+Les huit nouveaux thèmes sont regroupés dans un volet de sélection. Il reste ouvert pendant les choix et se rouvre automatiquement si un de ces thèmes est déjà sélectionné. Le choix d’un thème ne révèle aucune paire avant la distribution.
